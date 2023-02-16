@@ -3,7 +3,7 @@
     Reference: Mujoco Humanoid.xml
 -->
 <mujoco model="Blobby">
-    <option timestep="0.005" />
+    <option timestep="0.01" />
 
     <visual>
         <map force="0.1" zfar="30" />
