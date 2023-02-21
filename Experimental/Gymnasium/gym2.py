@@ -22,7 +22,7 @@ except:
     tb_info = traceback.extract_tb(tb)
     filename, line, func, text = tb_info[-1]
 
-    print('Lin {} in statement {}'.format(line, text))
+    print('Line {} in statement {}'.format(line, text))
 
 
 

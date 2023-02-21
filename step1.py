@@ -32,44 +32,40 @@ scene_option = mujoco.MjvOption()
 # Renderer
 renderer = mujoco.Renderer(model, 240, 320)
 
-print(model.body(1).pos)
-
 # Simulation #1
 duration = 1
 mujoco.mj_resetData(model, data)
 while data.time < duration:
     mujoco.mj_step(model, data)
 print("Simulation completed")
+
+# Debug print
 # print(contact_with_floor(data))
-
-# print(data.contact.geom1)
-# print(data.contact.geom2)
-
-# print(data.geom_xpos[1])
-# data.geom_xpos[1][2] = 2
-# print(data.geom(1))
+print(data.body(1))
+print(data.qpos.flat.copy())
+print(data.qvel.flat.copy())
 
 # Simulation #2
-duration = 10
-framerate = 60
+# duration = 10
+# framerate = 60
 
-frames = []
-mujoco.mj_resetData(model, data)
-while data.time < duration:
-    mujoco.mj_step(model, data)
-    if (contact_with_floor(data)):
-        print("HERE")
-        data.geom_xpos[0][2] = data.geom_xpos[0][2] - 1
-    if (len(frames) < data.time * framerate):
-        renderer.update_scene(data, 0)
-        pixels = renderer.render().copy()
-        frames.append(pixels)
-print("Simulation completed")
-print(model.body(1).pos)
+# frames = []
+# mujoco.mj_resetData(model, data)
+# while data.time < duration:
+#     mujoco.mj_step(model, data)
+#     if (contact_with_floor(data)):
+#         print("HERE")
+#         data.geom_xpos[0][2] = data.geom_xpos[0][2] - 1
+#     if (len(frames) < data.time * framerate):
+#         renderer.update_scene(data, 0)
+#         pixels = renderer.render().copy()
+#         frames.append(pixels)
+# print("Simulation completed")
+# print(model.body(1).pos)
 
-for i in range(len(frames)):
-    cv2.imshow('Video', frames[i])
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
-cv2.destroyAllWindows()
+# for i in range(len(frames)):
+#     cv2.imshow('Video', frames[i])
+#     if cv2.waitKey(25) & 0xFF == ord('q'):
+#         break
+# cv2.destroyAllWindows()
 
