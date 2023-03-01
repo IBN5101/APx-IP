@@ -41,9 +41,15 @@ print("Simulation completed")
 
 # Debug print
 # print(contact_with_floor(data))
-print(data.body(1))
-print(data.qpos.flat.copy())
-print(data.qvel.flat.copy())
+foodList = []
+for i in range(model.ngeom):
+    if (model.geom(i).name.startswith("food")):
+        foodList.append(model.geom(i).name)
+
+for food in foodList:
+    print(data.geom(food).name)
+# print(data.qpos.flat.copy())
+# print(data.qvel.flat.copy())
 
 # Simulation #2
 # duration = 10

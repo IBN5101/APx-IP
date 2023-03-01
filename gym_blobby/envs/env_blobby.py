@@ -65,7 +65,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             exclude_current_positions_from_observation
         )
 
-        # Observation space
+        # (IBN) Observation space
         # Joint position:
         # - Free joint = 7
         # - Fixed joint = 1
@@ -75,10 +75,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # Blobby has 1 free joint and 12 fixed joint
         # (7 + 12 * 1) + (6 + 12 * 1) = 37
         obs_shape = 37
-        # if not exclude_current_positions_from_observation:
-        #     obs_shape += 2
-        # if use_contact_forces:
-        #     obs_shape += 84
 
         observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_shape,), dtype=np.float64
@@ -92,6 +88,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             default_camera_config=DEFAULT_CAMERA_CONFIG,
             **kwargs
         )
+
+        # (IBN) Initalize food
+        self.initialize_food()
 
     @property
     def healthy_reward(self):
@@ -198,3 +197,16 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         observation = self._get_obs()
 
         return observation
+    
+    # (IBN) Modification
+    def initialize_food(self):
+        self.foodList = []
+        for i in range(self.model.ngeom):
+            if (self.model.geom(i).name.startswith("food")):
+                self.foodList.append(self.model.geom(i).name)
+
+    def get_food_list(self):
+        result = ""
+        for i in self.foodList:
+            result += i + " "
+        return result

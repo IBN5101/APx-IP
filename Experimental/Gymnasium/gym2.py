@@ -6,7 +6,7 @@ import traceback
 path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 
 try:
-    env = gym.make("Ant-v4", render_mode="human", xml_file=path)
+    env = gym.make("Ant-v4", render_mode="human")
 
     observation, info = env.reset(seed=42)
     for _ in range(1000):

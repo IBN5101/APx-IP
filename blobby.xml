@@ -68,7 +68,7 @@
             <camera name="side" pos="0 -3 1" xyaxes="1 0 0 0 1 2" mode="trackcom" />
             <freejoint name="root"/>
 
-            <geom name="sphere" size="0.2" />
+            <geom name="sphere" size="0.2" density="250"/>
             <body name="thigh1" pos="0.2 0 0">
                 <!-- Horizontal joint -->
                 <joint name="thigh1_xz" axis="0 0 1" class="bthigh_xz" />
@@ -118,8 +118,8 @@
         <!-- Other world bodies -->
         <body>
             <!-- Testing -->
-            <geom name="food0" pos="0 0 0" size="0.05 0.1" class="food" />
-            <geom name="foodA" pos="0.5 0 0" size="0.05 0.4" class="food" />
+            <!-- <geom name="food0" pos="0 0 0" size="0.05 0.1" class="food" />
+            <geom name="foodA" pos="0.5 0 0" size="0.05 0.4" class="food" /> -->
             <!-- Real -->
             <geom name="food1" pos="0 1 0" class="food" />
             <geom name="food2" pos="1 0 0" class="food" />
