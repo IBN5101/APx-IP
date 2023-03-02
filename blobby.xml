@@ -62,7 +62,7 @@
             specular="0.3 0.3 0.3" pos="0 -6 4" cutoff="30" />
 
         <!-- Blobby -->
-        <body name="blobby" pos="0 0 1" childclass="body">
+        <body name="blobby" pos="0 0 0.4" childclass="body">
             <light name="top" pos="0 0 2" mode="trackcom" />
             <camera name="back" pos="-3 0 1" xyaxes="0 -1 0 1 0 2" mode="trackcom" />
             <camera name="side" pos="0 -3 1" xyaxes="1 0 0 0 1 2" mode="trackcom" />

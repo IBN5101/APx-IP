@@ -27,7 +27,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         contact_cost_weight=5e-4,
         healthy_reward=1.0,
         terminate_when_unhealthy=False,
-        healthy_z_range=(0.25, 2.0),
+        healthy_z_range=(0.2, 2.0),
         contact_force_range=(-1.0, 1.0),
         reset_noise_scale=0.1,
         exclude_current_positions_from_observation=False,
