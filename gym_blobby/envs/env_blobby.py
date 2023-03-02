@@ -27,7 +27,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         contact_cost_weight=5e-4,
         healthy_reward=1.0,
         terminate_when_unhealthy=False,
-        healthy_z_range=(0.2, 1.0),
+        healthy_z_range=(0.25, 1.0),
         contact_force_range=(-1.0, 1.0),
         reset_noise_scale=0.1,
         exclude_current_positions_from_observation=False,
@@ -73,8 +73,11 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # - Free joint = 6
         # - Fixed joint = 1
         # Blobby has 1 free joint and 12 fixed joint
-        # (7 + 12 * 1) + (6 + 12 * 1) = 37
-        obs_shape = 37
+        # obs_space = (7 + 12 * 1) + (6 + 12 * 1) = 37
+        # [!!!] HARD CODING BECAUSE THE MODEL IS INITIALIZED AFTER THE OBSERVATION SPACE
+        # Food count = 6
+        # obs_space = 37 + 6 = 43
+        obs_shape = 43
 
         observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_shape,), dtype=np.float64
@@ -134,13 +137,23 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         self.do_simulation(action, self.frame_skip)
         xy_position_after = self.get_body_com("blobby")[:2].copy()
 
+        # (IBN) Observe food
+        food_found = self.on_body_touches_food()
+        if ((food_found is not None) and (food_found not in self.food_eaten_list)):
+            self.food_eaten_list.append(food_found)
+        # If eat food, reward +10
+        food_reward = len(self.food_eaten_list) * 10
+
+        print(self.data.qpos.flat[2])
+
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
         x_velocity, y_velocity = xy_velocity
 
         forward_reward = x_velocity
         healthy_reward = self.healthy_reward
 
-        rewards = forward_reward + healthy_reward
+        # rewards = forward_reward + healthy_reward
+        rewards = healthy_reward + food_reward
 
         costs = ctrl_cost = self.control_cost(action)
 
@@ -171,15 +184,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def _get_obs(self):
         position = self.data.qpos.flat.copy()
         velocity = self.data.qvel.flat.copy()
+        food = self.get_food_distances_from_body()
 
-        # if self._exclude_current_positions_from_observation:
-        #     position = position[2:]
-
-        if self._use_contact_forces:
-            contact_force = self.contact_forces.flat.copy()
-            return np.concatenate((position, velocity, contact_force))
-        else:
-            return np.concatenate((position, velocity))
+        return np.concatenate((position, velocity, food))
 
     def reset_model(self):
         noise_low = -self._reset_noise_scale
@@ -200,13 +207,39 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     
     # (IBN) Modification
     def initialize_food(self):
-        self.foodList = []
+        self.food_eaten_list = []
+        self.food_list = []
         for i in range(self.model.ngeom):
             if (self.model.geom(i).name.startswith("food")):
-                self.foodList.append(self.model.geom(i).name)
+                self.food_list.append(self.model.geom(i).name)
 
     def get_food_list(self):
         result = ""
-        for i in self.foodList:
+        for i in self.food_list:
             result += i + " "
         return result
+    
+    def get_food_distances_from_body(self):
+        food_distance = []
+        for i in self.food_list:
+            food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
+        return food_distance
+    
+    def on_body_touches_food(self):
+        for i in range(self.data.ncon):
+            contact = self.data.contact[i]
+            body = None
+            if self.data.geom(contact.geom1).name.startswith("sphere"):
+                body = contact.geom1
+            elif self.data.geom(contact.geom2).name.startswith("sphere"):
+                body = contact.geom2
+            food = None
+            if self.data.geom(contact.geom1).name.startswith("food"):
+                food = contact.geom1
+            elif self.data.geom(contact.geom2).name.startswith("food"):
+                food = contact.geom2
+
+            if (body is not None) and (food is not None):
+                return self.data.geom(food).name
+            
+            return None

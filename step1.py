@@ -3,10 +3,13 @@ import mujoco
 import sys
 import cv2
 
+import numpy as np
+
 model = mujoco.MjModel.from_xml_path('blobby.xml')
 data = mujoco.MjData(model)
 mujoco.mj_kinematics(model, data)
 
+# Methods
 def contact_with_floor(data):
     for i in range(data.ncon):
         contact = data.contact[i]
@@ -39,18 +42,25 @@ while data.time < duration:
     mujoco.mj_step(model, data)
 print("Simulation completed")
 
-# Debug print
+# Contact with floor
 # print(contact_with_floor(data))
-foodList = []
-for i in range(model.ngeom):
-    if (model.geom(i).name.startswith("food")):
-        foodList.append(model.geom(i).name)
 
-for food in foodList:
-    print(data.geom(food).name)
-# print(data.qpos.flat.copy())
-# print(data.qvel.flat.copy())
+# Food list
+# foodList = []
+# for i in range(model.ngeom):
+#     if (model.geom(i).name.startswith("food")):
+#         foodList.append(model.geom(i).name)
 
+# for food in foodList:
+#     print(data.geom(food).name)
+
+# Food distance
+print(data.geom("food1").xpos)
+print(data.geom("sphere").xpos)
+dist = np.linalg.norm(data.geom("food1").xpos - data.geom("sphere").xpos)
+print(dist)
+
+# ----------------------------
 # Simulation #2
 # duration = 10
 # framerate = 60
