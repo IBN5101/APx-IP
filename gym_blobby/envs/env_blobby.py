@@ -27,7 +27,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         contact_cost_weight=5e-4,
         healthy_reward=1.0,
         terminate_when_unhealthy=False,
-        healthy_z_range=(0.25, 1.0),
+        healthy_z_range=(0.25, 2.0),
         contact_force_range=(-1.0, 1.0),
         reset_noise_scale=0.1,
         exclude_current_positions_from_observation=False,
@@ -144,8 +144,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # If eat food, reward +10
         food_reward = len(self.food_eaten_list) * 10
 
-        print(self.data.qpos.flat[2])
-
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
         x_velocity, y_velocity = xy_velocity
 
@@ -189,6 +187,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         return np.concatenate((position, velocity, food))
 
     def reset_model(self):
+        # (IBN) This really should not be here, but there is no clean way to reset()
+        self.food_eaten_list = []
+
         noise_low = -self._reset_noise_scale
         noise_high = self._reset_noise_scale
 
@@ -205,7 +206,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
         return observation
     
-    # (IBN) Modification
+    # (IBN) Extra modification
     def initialize_food(self):
         self.food_eaten_list = []
         self.food_list = []
