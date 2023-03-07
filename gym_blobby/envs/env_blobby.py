@@ -150,8 +150,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         forward_reward = x_velocity
         healthy_reward = self.healthy_reward
 
-        # rewards = forward_reward + healthy_reward
-        rewards = healthy_reward + food_reward
+        rewards = forward_reward
+        # rewards = healthy_reward + food_reward
 
         costs = ctrl_cost = self.control_cost(action)
 

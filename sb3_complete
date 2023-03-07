@@ -9,12 +9,18 @@ xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
 unhealthy_termination = True
 
+# Notes
+# Idea 1: Change food to not be one-time reward
+# Idea 2: Exponential reward to distance to food
+# Idea 3: Termination with health. Health = 100, decrease on time, increase on food.
+
 def sb3_save():
     env = BlobbyEnv(render_mode=None, xml_file=xml_path, terminate_when_unhealthy=unhealthy_termination)
 
     check_env(env)
+
     model = PPO("MlpPolicy", env, verbose=0)
-    model.learn(total_timesteps=30000)
+    model.learn(total_timesteps=100000, progress_bar=True)
 
     model.save(sb_path)
     print("Training complete")
