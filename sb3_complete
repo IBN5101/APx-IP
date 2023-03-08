@@ -20,7 +20,11 @@ def sb3_save():
     check_env(env)
 
     model = PPO("MlpPolicy", env, verbose=0)
-    model.learn(total_timesteps=100000, progress_bar=True)
+    # Estimation: 
+    # 100k steps = 4 mins
+    # 1M steps = 41 mins
+    # 3M steps = 2 hours
+    model.learn(total_timesteps=3000000, progress_bar=True)
 
     model.save(sb_path)
     print("Training complete")
@@ -41,4 +45,4 @@ def sb3_load():
 
 # Main
 sb3_save()
-sb3_load()
+# sb3_load()

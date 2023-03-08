@@ -4,8 +4,12 @@ from stable_baselines3 import PPO
 from gym_blobby.envs.env_blobby import BlobbyEnv
 import gymnasium
 
+# Main paths
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
+# Special paths
+sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
+
 
 # Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path, terminate_when_unhealthy=True)
