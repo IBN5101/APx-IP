@@ -13,6 +13,7 @@ unhealthy_termination = False
 # Idea 1: Change food to not be one-time reward
 # Idea 2: Exponential reward to distance to food
 # Idea 3: Termination with health. Health = 100, decrease on time, increase on food.
+# Idea 4: Death = -1, Food = +1, HP / 10000?
 
 def sb3_save():
     env = BlobbyEnv(render_mode=None, xml_file=xml_path, terminate_when_unhealthy=unhealthy_termination)
@@ -24,7 +25,8 @@ def sb3_save():
     # 100k steps = 4 mins
     # 1M steps = 41 mins
     # 3M steps = 2 hours
-    model.learn(total_timesteps=1000000, progress_bar=True)
+    # 5M steps = 3 hours
+    model.learn(total_timesteps=5000000, progress_bar=True)
 
     model.save(sb_path)
     print("Training complete")
@@ -44,5 +46,5 @@ def sb3_load():
 
 
 # Main
-# sb3_save()
-sb3_load()
+sb3_save()
+# sb3_load()

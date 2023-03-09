@@ -14,7 +14,7 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/posing"
 
 # Check if this matches sb3_save.py settings
-env = BlobbyEnv(render_mode="human", xml_file=xml_path, terminate_when_unhealthy=True)
+env = BlobbyEnv(render_mode="human", xml_file=xml_path, terminate_when_unhealthy=False)
 # env = gymnasium.make("Ant-v4", render_mode = "human", terminate_when_unhealthy=True)
 
 # SB3

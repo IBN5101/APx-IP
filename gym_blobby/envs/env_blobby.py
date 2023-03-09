@@ -157,19 +157,21 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         healthy_reward = self.healthy_reward
         # Food reward calcualtion
         # Each food eaten = +10
-        food_reward = len(self.food_eaten_list) * 10
+        food_reward = len(self.food_eaten_list)
 
         # Rewards
         rewards = 0
         # rewards += forward_reward
         # rewards += healthy_reward
-        rewards += self.get_distance_from_origin()
+        # rewards += self.get_distance_from_origin()
+        rewards += self.get_HP() / 10000
         rewards += food_reward
 
         # Costs
         costs = 0
         # costs = ctrl_cost = self.control_cost(action)
-        costs += self.get_HP_loss() / 10
+        # costs += self.get_HP_loss() / 10
+        costs = -1 if self.get_HP() <= 0 else 0
 
         reward = rewards - costs
 
