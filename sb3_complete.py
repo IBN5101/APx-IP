@@ -7,7 +7,7 @@ import gymnasium
 # Settings
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
-unhealthy_termination = True
+unhealthy_termination = False
 
 # Notes
 # Idea 1: Change food to not be one-time reward
@@ -24,7 +24,7 @@ def sb3_save():
     # 100k steps = 4 mins
     # 1M steps = 41 mins
     # 3M steps = 2 hours
-    model.learn(total_timesteps=2000000, progress_bar=True)
+    model.learn(total_timesteps=1000000, progress_bar=True)
 
     model.save(sb_path)
     print("Training complete")
@@ -44,5 +44,5 @@ def sb3_load():
 
 
 # Main
-sb3_save()
-# sb3_load()
+# sb3_save()
+sb3_load()

@@ -92,8 +92,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             **kwargs
         )
 
-        # (IBN) Initalize food
+        # (IBN) Initalize custom variables
         self.initialize_food()
+        self.initialize_HP()
 
     @property
     def healthy_reward(self):
@@ -130,51 +131,62 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     @property
     def terminated(self):
         terminated = not self.is_healthy if self._terminate_when_unhealthy else False
+        if (self.get_HP() <= 0):
+            terminated = True
         return terminated
 
     def step(self, action):
+        # XY position
         xy_position_before = self.get_body_com("blobby")[:2].copy()
         self.do_simulation(action, self.frame_skip)
         xy_position_after = self.get_body_com("blobby")[:2].copy()
+
+        # (IBN) HP calculation
+        self.step_HP()
 
         # (IBN) Observe food
         food_found = self.on_body_touches_food()
         if ((food_found is not None) and (food_found not in self.food_eaten_list)):
             self.food_eaten_list.append(food_found)
-        # If eat food, reward +10
-        food_reward = len(self.food_eaten_list) * 10
 
+        # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
         x_velocity, y_velocity = xy_velocity
-
         forward_reward = x_velocity
+        # Healthy reward calculation
         healthy_reward = self.healthy_reward
+        # Food reward calcualtion
+        # Each food eaten = +10
+        food_reward = len(self.food_eaten_list) * 10
 
-        # rewards = forward_reward
-        # rewards = healthy_reward + food_reward
-        rewards = self.get_distance_from_origin()
+        # Rewards
+        rewards = 0
+        # rewards += forward_reward
+        # rewards += healthy_reward
+        rewards += self.get_distance_from_origin()
+        rewards += food_reward
 
-        costs = ctrl_cost = self.control_cost(action)
+        # Costs
+        costs = 0
+        # costs = ctrl_cost = self.control_cost(action)
+        costs += self.get_HP_loss() / 10
+
+        reward = rewards - costs
 
         terminated = self.terminated
         observation = self._get_obs()
         info = {
             "reward_forward": forward_reward,
-            "reward_ctrl": -ctrl_cost,
             "reward_survive": healthy_reward,
             "x_position": xy_position_after[0],
             "y_position": xy_position_after[1],
-            "distance_from_origin": np.linalg.norm(xy_position_after, ord=2),
+            "distance_from_origin_SB3": np.linalg.norm(xy_position_after, ord=2),
+            "distance_from_origin_IBN": self.get_distance_from_origin(),
             "x_velocity": x_velocity,
             "y_velocity": y_velocity,
-            "forward_reward": forward_reward,
+            "HP": self.get_HP(),
+            "HP_loss": self.get_HP_loss(),  
         }
-        if self._use_contact_forces:
-            contact_cost = self.contact_cost
-            costs += contact_cost
-            info["reward_ctrl"] = -contact_cost
-
-        reward = rewards - costs
 
         if self.render_mode == "human":
             self.render()
@@ -188,8 +200,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         return np.concatenate((position, velocity, food))
 
     def reset_model(self):
-        # (IBN) This really should not be here, but there is no clean way to reset()
-        self.food_eaten_list = []
+        # (IBN) This really should not be here, but I don't know how to overload reset()
+        self.reset_custom_parameters()
 
         noise_low = -self._reset_noise_scale
         noise_high = self._reset_noise_scale
@@ -207,7 +219,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
         return observation
     
+    # --------------------------------------------------------------
     # (IBN) Extra modification
+    # --------------------------------------------------------------
     def initialize_food(self):
         self.food_eaten_list = []
         self.food_list = []
@@ -226,6 +240,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         for i in self.food_list:
             food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
         return food_distance
+    
+    def get_distance_from_origin(self):
+        return np.linalg.norm(self.data.geom("sphere").xpos, ord=2)
     
     def on_body_touches_food(self):
         for i in range(self.data.ncon):
@@ -246,5 +263,42 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             
             return None
         
-    def get_distance_from_origin(self):
-        return np.linalg.norm(self.data.geom("sphere").xpos, ord=2)
+    def is_body_touching_floor(self):
+        for i in range(self.data.ncon):
+            contact = self.data.contact[i]
+            body = None
+            if self.data.geom(contact.geom1).name.startswith("sphere"):
+                body = contact.geom1
+            elif self.data.geom(contact.geom2).name.startswith("sphere"):
+                body = contact.geom2
+            floor = None
+            if self.data.geom(contact.geom1).name.startswith("floor"):
+                floor = contact.geom1
+            elif self.data.geom(contact.geom2).name.startswith("floor"):
+                floor = contact.geom2
+
+            if (body is not None) and (floor is not None):
+                return True
+            
+            return None
+    
+    def reset_custom_parameters(self):
+        self.food_eaten_list = []
+        self.initialize_HP()
+
+    def initialize_HP(self):
+        # (IBN) THIS IS HARD CODING !!!
+        self.HP = 500
+
+    def get_HP(self):
+        return self.HP
+
+    def get_HP_loss(self):
+        HP_loss = 1
+        if (self.is_body_touching_floor()):
+            HP_loss = 20
+
+        return HP_loss
+    
+    def step_HP(self):
+        self.HP -= self.get_HP_loss()
