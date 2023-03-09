@@ -150,8 +150,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         forward_reward = x_velocity
         healthy_reward = self.healthy_reward
 
-        rewards = forward_reward
+        # rewards = forward_reward
         # rewards = healthy_reward + food_reward
+        rewards = self.get_distance_from_origin()
 
         costs = ctrl_cost = self.control_cost(action)
 
@@ -244,3 +245,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
                 return self.data.geom(food).name
             
             return None
+        
+    def get_distance_from_origin(self):
+        return np.linalg.norm(self.data.geom("sphere").xpos, ord=2)
