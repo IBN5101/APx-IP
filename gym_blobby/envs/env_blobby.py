@@ -130,9 +130,18 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     @property
     def terminated(self):
+        terminated = False
+
+        # Healthy termination (legacy)
         terminated = not self.is_healthy if self._terminate_when_unhealthy else False
+
+        # HP-based termination
         if (self.get_HP() <= 0):
             terminated = True
+        # Finite state check
+        if (not np.isfinite(self.state_vector()).all()):
+            terminated = True
+
         return terminated
 
     def step(self, action):
@@ -148,6 +157,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         food_found = self.on_body_touches_food()
         if ((food_found is not None) and (food_found not in self.food_eaten_list)):
             self.food_eaten_list.append(food_found)
+            self.increase_HP(500)
 
         # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
@@ -186,6 +196,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "distance_from_origin_IBN": self.get_distance_from_origin(),
             "x_velocity": x_velocity,
             "y_velocity": y_velocity,
+            "food_distances": self.get_food_distances_from_body(),
             "HP": self.get_HP(),
             "HP_loss": self.get_HP_loss(),  
         }
@@ -240,7 +251,11 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def get_food_distances_from_body(self):
         food_distance = []
         for i in self.food_list:
-            food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
+            # If food is eaten, set distance to -1
+            if (i in self.food_eaten_list):
+                food_distance.append(-1)
+            else:
+                food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
         return food_distance
     
     def get_distance_from_origin(self):
@@ -291,6 +306,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
         self.HP = 500
+
+    def increase_HP(self, HPUp):
+        self.HP += HPUp
 
     def get_HP(self):
         return self.HP

@@ -48,7 +48,7 @@
 
         <!-- Food -->
         <default class="food">
-            <geom type="cylinder" size="0.05 0.5" />
+            <geom type="sphere" size="0.15" />
         </default>
 
         <!-- Site -->
@@ -129,12 +129,12 @@
             <!-- <geom name="food0" pos="0 0 0" size="0.05 0.1" class="food" />
             <geom name="foodA" pos="0.5 0 0" size="0.05 0.4" class="food" /> -->
             <!-- Real -->
-            <geom name="food1" pos="0 1 0" class="food" />
-            <geom name="food2" pos="1 0 0" class="food" />
-            <geom name="food3" pos="1 1 0" class="food" />
-            <geom name="food4" pos="0 2 0" class="food" />
-            <geom name="food5" pos="0 -2 0" class="food" />
-            <geom name="food6" pos="-2 -2 0" class="food" />
+            <geom name="food1" class="food" pos="0 0 0"/>
+            <geom name="food2" class="food" pos="1 0 0"  />
+            <geom name="food3" class="food" pos="1 1 0"  />
+            <geom name="food4" class="food" pos="0 2 0"  />
+            <geom name="food5" class="food" pos="0 -2 0"  />
+            <geom name="food6" class="food" pos="-2 -2 0"  />
         </body>
     </worldbody>
 
