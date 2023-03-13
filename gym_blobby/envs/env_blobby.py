@@ -73,11 +73,13 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # - Free joint = 6
         # - Fixed joint = 1
         # Blobby has 1 free joint and 12 fixed joint
-        # obs_space = (7 + 12 * 1) + (6 + 12 * 1) = 37
+        # obs_space += (7 + 12 * 1) + (6 + 12 * 1) = 37
         # [!!!] HARD CODING BECAUSE THE MODEL IS INITIALIZED AFTER THE OBSERVATION SPACE
         # Food count = 6
-        # obs_space = 37 + 6 = 43
-        obs_shape = 43
+        # obs_space += 6 = 43
+        # Sphere xpos = 3
+        # obs_space += 3 = 46
+        obs_shape = 46
 
         observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_shape,), dtype=np.float64
@@ -150,8 +152,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         self.do_simulation(action, self.frame_skip)
         xy_position_after = self.get_body_com("blobby")[:2].copy()
 
-        # (IBN) HP calculation
-        self.step_HP()
+        # (IBN) Extra step calculation
+        self.step_blobby()
 
         # (IBN) Observe food
         food_found = self.on_body_touches_food()
@@ -181,7 +183,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         costs = 0
         # costs = ctrl_cost = self.control_cost(action)
         # costs += self.get_HP_loss() / 10
-        costs = -1 if self.get_HP() <= 0 else 0
+        # costs = 1 if self.get_HP() <= 0 else 0
+        costs += self.get_penalty() / 1000
 
         reward = rewards - costs
 
@@ -198,7 +201,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "y_velocity": y_velocity,
             "food_distances": self.get_food_distances_from_body(),
             "HP": self.get_HP(),
-            "HP_loss": self.get_HP_loss(),  
         }
 
         if self.render_mode == "human":
@@ -209,8 +211,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         position = self.data.qpos.flat.copy()
         velocity = self.data.qvel.flat.copy()
         food = self.get_food_distances_from_body()
+        sphere = self.data.geom("sphere").xpos.copy()
 
-        return np.concatenate((position, velocity, food))
+        return np.concatenate((position, velocity, food, sphere))
 
     def reset_model(self):
         # (IBN) This really should not be here, but I don't know how to overload reset()
@@ -302,6 +305,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def reset_custom_parameters(self):
         self.food_eaten_list = []
         self.initialize_HP()
+        self.initialize_penalty()
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
@@ -313,12 +317,19 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def get_HP(self):
         return self.HP
 
-    def get_HP_loss(self):
+    def initialize_penalty(self):
+        self.penalty = 0
+
+    def increase_penalty(self):
+        self.penalty += 1
+
+    def get_penalty(self):
+        return self.penalty
+    
+    def step_blobby(self):
         HP_loss = 1
         if (self.is_body_touching_floor()):
+            self.increase_penalty()
             HP_loss = 20
 
-        return HP_loss
-    
-    def step_HP(self):
-        self.HP -= self.get_HP_loss()
+        self.HP -= HP_loss

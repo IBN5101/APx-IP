@@ -26,6 +26,8 @@ for _ in range(1000):
     # action = env.action_space.sample()
     action, _states = model.predict(observation)
     observation, reward, terminated, truncated, info = env.step(action)
+    # print(info["HP"])
+    print(reward)
     
     if terminated or truncated:
         observation, info = env.reset()

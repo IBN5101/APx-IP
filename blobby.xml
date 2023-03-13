@@ -32,17 +32,20 @@
             <joint type="hinge" damping=".2" stiffness="1" armature=".01" limited="true"
                 solimplimit="0 .99 .01" />
             <default class="joint_big">
-                <joint damping="2" stiffness="10" />
+                <joint damping="15" stiffness="10" />
 
                 <default class="bthigh_xz">
-                    <joint range="-60 60" />
+                    <joint range="-50 50" />
                 </default>
                 <default class="bthigh_y">
                     <joint range="-50 50" />
                 </default>
             </default>
             <default class="knee">
-                <joint damping="10" stiffness="10" range="-40 60" />
+                <joint damping="15" stiffness="10" range="-40 40" />
+            </default>
+            <default class = "shin">
+                <geom type="capsule" size="0.07"/>
             </default>
         </default>
 
@@ -58,7 +61,7 @@
 
         <!-- Motor -->
         <default class="blobby_motor">
-            <motor gear="90" />
+            <motor gear="180" />
         </default>
     </default>
 
@@ -73,50 +76,50 @@
             <light name="top" pos="0 0 2" mode="trackcom" />
             <camera name="back" pos="-3 0 1" xyaxes="0 -1 0 1 0 2" mode="trackcom" />
             <camera name="side" pos="0 -3 1" xyaxes="1 0 0 0 1 2" mode="trackcom" />
-            <freejoint name="root"/>
 
             <!-- Main body -->
-            <geom name="sphere" size="0.2" density="300"/>
+            <freejoint name="root"/>
+            <geom name="sphere" size="0.2" density="900"/>
 
             <body name="thigh1" pos="0.2 0 0">
                 <!-- Horizontal joint -->
                 <joint name="thigh1_xz" axis="0 0 1" class="bthigh_xz" />
                 <!-- Vertical joint -->
                 <joint name="thigh1_y" axis="0 -1 0" class="bthigh_y" />
-                <geom name="thigh1" type="capsule" fromto="0 0 0 0.2 0 0" size="0.05" />
-                <body name="shin1" pos="0.2 0 0">
+                <geom name="thigh1" type="capsule" fromto="0 0 0 0.25 0 0" size="0.06" />
+                <body name="shin1" pos="0.25 0 0">
                     <joint name="knee1" axis="0 -1 0" class="knee" />
-                    <geom name="shin1" type="capsule" fromto="0 0 0 0 0 -0.5" size="0.06" />
+                    <geom name="shin1" class="shin" fromto="0 0 0 0 0 -0.5"/>
                 </body>
             </body>
 
             <body name="thigh2" pos="0 0.2 0">
                 <joint name="thigh2_xz" axis="0 0 1" class="bthigh_xz" />
                 <joint name="thigh2_y" axis="1 0 0" class="bthigh_y" />
-                <geom name="thigh2" type="capsule" fromto="0 0 0 0 0.2 0" size="0.05" />
-                <body name="shin2" pos="0 0.2 0">
+                <geom name="thigh2" type="capsule" fromto="0 0 0 0 0.25 0" size="0.06" />
+                <body name="shin2" pos="0 0.25 0">
                     <joint name="knee2" axis="1 0 0" class="knee" />
-                    <geom name="shin2" type="capsule" fromto="0 0 0 0 0 -0.5" size="0.06" />
+                    <geom name="shin2" class="shin" fromto="0 0 0 0 0 -0.5"/>
                 </body>
             </body>
 
             <body name="thigh3" pos="-0.2 0 0">
                 <joint name="thigh3_xz" axis="0 0 1" class="bthigh_xz" />
                 <joint name="thigh3_y" axis="0 1 0" class="bthigh_y" />
-                <geom name="thigh3" type="capsule" fromto="0 0 0 -0.2 0 0" size="0.05" />
-                <body name="shin3" pos="-0.2 0 0">
+                <geom name="thigh3" type="capsule" fromto="0 0 0 -0.25 0 0" size="0.06" />
+                <body name="shin3" pos="-0.25 0 0">
                     <joint name="knee3" axis="0 1 0" class="knee" />
-                    <geom name="shin3" type="capsule" fromto="0 0 0 0 0 -0.5" size="0.06" />
+                    <geom name="shin3" class="shin" fromto="0 0 0 0 0 -0.5"/>
                 </body>
             </body>
 
             <body name="thigh4" pos="0 -0.2 0">
                 <joint name="thigh4_xz" axis="0 0 1" class="bthigh_xz" />
                 <joint name="thigh4_y" axis="-1 0 0" class="bthigh_y" />
-                <geom name="thigh4" type="capsule" fromto="0 0 0 0 -0.2 0" size="0.05" />
-                <body name="shin4" pos="0 -0.2 0">
+                <geom name="thigh4" type="capsule" fromto="0 0 0 0 -0.25 0" size="0.06" />
+                <body name="shin4" pos="0 -0.25 0">
                     <joint name="knee4" axis="-1 0 0" class="knee" />
-                    <geom name="shin4" type="capsule" fromto="0 0 0 0 0 -0.5" size="0.06" />
+                    <geom name="shin4" class="shin" fromto="0 0 0 0 0 -0.5"/>
                 </body>
             </body>
 
