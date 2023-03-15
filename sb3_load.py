@@ -8,9 +8,9 @@ import gymnasium
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
 # Special paths
-# 01: Breakdance
+# 01: Breakdance (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
-# 02: Posing
+# 02: Posing (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/posing"
 
 # Check if this matches sb3_save.py settings

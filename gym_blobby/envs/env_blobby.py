@@ -213,6 +213,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         food = self.get_food_distances_from_body()
         sphere = self.data.geom("sphere").xpos.copy()
 
+        # return np.concatenate((position, velocity, food))
         return np.concatenate((position, velocity, food, sphere))
 
     def reset_model(self):

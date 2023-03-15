@@ -28,30 +28,32 @@
         <motor ctrlrange="-1 1" ctrllimited="true" />
         <!-- Blobby -->
         <default class="body">
-            <!-- joints -->
+            <!-- Geoms -->
+            <default class = "shin">
+                <geom type="capsule" size="0.07"/>
+            </default>
+            <!-- Joints -->
             <joint type="hinge" damping=".2" stiffness="1" armature=".01" limited="true"
                 solimplimit="0 .99 .01" />
             <default class="joint_big">
                 <joint damping="15" stiffness="10" />
 
                 <default class="bthigh_xz">
-                    <joint range="-50 50" />
+                    <joint range="-30 30" />
                 </default>
                 <default class="bthigh_y">
-                    <joint range="-50 50" />
+                    <joint range="-40 40" />
                 </default>
             </default>
             <default class="knee">
-                <joint damping="15" stiffness="10" range="-40 40" />
-            </default>
-            <default class = "shin">
-                <geom type="capsule" size="0.07"/>
+                <!-- <joint damping="15" stiffness="10" range="-40 40" /> -->
+                <joint damping="15" stiffness="100" range="-1 1" />
             </default>
         </default>
 
         <!-- Food -->
         <default class="food">
-            <geom type="sphere" size="0.15" />
+            <geom type="sphere" size="0.18" />
         </default>
 
         <!-- Site -->
@@ -148,17 +150,19 @@
 
     <!-- Controls -->
     <actuator>
+        <!-- Thigh motor -->
         <motor name="thigh1_xz" class="blobby_motor" joint="thigh1_xz" />
         <motor name="thigh1_y"  class="blobby_motor" joint="thigh1_y" />
-        <motor name="knee1"     class="blobby_motor" joint="knee1" />
         <motor name="thigh2_xz" class="blobby_motor" joint="thigh2_xz" />
         <motor name="thigh2_y"  class="blobby_motor" joint="thigh2_y" />
-        <motor name="knee2"     class="blobby_motor" joint="knee2" />
         <motor name="thigh3_xz" class="blobby_motor" joint="thigh3_xz" />
         <motor name="thigh3_y"  class="blobby_motor" joint="thigh3_y" />
-        <motor name="knee3"     class="blobby_motor" joint="knee3" />
         <motor name="thigh4_xz" class="blobby_motor" joint="thigh4_xz" />
         <motor name="thigh4_y"  class="blobby_motor" joint="thigh4_y" />
-        <motor name="knee4"     class="blobby_motor" joint="knee4" />
+        <!-- Knee motor -->
+        <!-- <motor name="knee1"     class="blobby_motor" joint="knee1" /> -->
+        <!-- <motor name="knee2"     class="blobby_motor" joint="knee2" /> -->
+        <!-- <motor name="knee3"     class="blobby_motor" joint="knee3" /> -->
+        <!-- <motor name="knee4"     class="blobby_motor" joint="knee4" /> -->
     </actuator>
 </mujoco>
