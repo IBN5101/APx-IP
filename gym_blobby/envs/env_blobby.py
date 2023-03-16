@@ -159,7 +159,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         food_found = self.on_body_touches_food()
         if ((food_found is not None) and (food_found not in self.food_eaten_list)):
             self.food_eaten_list.append(food_found)
-            self.increase_HP(500)
+            food_HP_bonus = 300
+            self.increase_HP(food_HP_bonus)
 
         # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt

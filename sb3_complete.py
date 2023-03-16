@@ -27,7 +27,7 @@ def sb3_save():
     # 3M steps = 2 hours
     # 5M steps = 3 hours
     # 10M steps = 6 hours
-    model.learn(total_timesteps=10 * 1000000, progress_bar=True)
+    model.learn(total_timesteps=3 * 1000000, progress_bar=True)
 
     model.save(sb_path)
     print("Training complete")
