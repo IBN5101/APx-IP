@@ -12,6 +12,8 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/ppo_blobby"
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
 # 02: Posing (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/posing"
+# 03: Fallback
+sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/fallback_v0"
 
 # Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path, terminate_when_unhealthy=False)
@@ -22,7 +24,7 @@ check_env(env)
 model = PPO.load(sb_path)
 
 observation, info = env.reset()
-for _ in range(1000):
+for _ in range(10000):
     # action = env.action_space.sample()
     action, _states = model.predict(observation)
     observation, reward, terminated, truncated, info = env.step(action)

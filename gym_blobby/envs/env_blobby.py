@@ -169,7 +169,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # Healthy reward calculation
         healthy_reward = self.healthy_reward
         # Food reward calcualtion
-        # Each food eaten = +10
+        # Each food eaten = +1
         food_reward = len(self.food_eaten_list)
 
         # Rewards
@@ -177,7 +177,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # rewards += forward_reward
         # rewards += healthy_reward
         # rewards += self.get_distance_from_origin()
-        rewards += self.get_HP() / 10000
+        rewards += self.get_timeStep() / 10000
         rewards += food_reward
 
         # Costs
@@ -308,6 +308,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         self.food_eaten_list = []
         self.initialize_HP()
         self.initialize_penalty()
+        self.initialize_timeStep()
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
@@ -329,9 +330,19 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         return self.penalty
     
     def step_blobby(self):
+        # (IBN) TODO: REFACTOR THIS
         HP_loss = 1
         if (self.is_body_touching_floor()):
             self.increase_penalty()
             HP_loss = 20
 
         self.HP -= HP_loss
+        self.timeStep += 1
+
+    def initialize_timeStep(self):
+        # I am sure that there is a built-in variable for this,
+        # but I don't know how to access it.
+        self.timeStep = 0
+
+    def get_timeStep(self):
+        return self.timeStep
