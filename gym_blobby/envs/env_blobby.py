@@ -75,11 +75,11 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # Blobby has 1 free joint and 12 fixed joint
         # obs_space += (7 + 12 * 1) + (6 + 12 * 1) = 37
         # [!!!] HARD CODING BECAUSE THE MODEL IS INITIALIZED AFTER THE OBSERVATION SPACE
-        # Food count = 6
-        # obs_space += 6 = 43
+        # Food count = 1 (closest food)
+        # obs_space += 1 = 38
         # Sphere xpos = 3
-        # obs_space += 3 = 46
-        obs_shape = 46
+        # obs_space += 3 = 41
+        obs_shape = 41
 
         observation_space = Box(
             low=-np.inf, high=np.inf, shape=(obs_shape,), dtype=np.float64
@@ -169,8 +169,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # Healthy reward calculation
         healthy_reward = self.healthy_reward
         # Food reward calcualtion
-        # Each food eaten = +1
-        food_reward = len(self.food_eaten_list)
+        # Each food eaten = +2
+        food_reward = len(self.food_eaten_list) * 2
 
         # Rewards
         rewards = 0
@@ -178,6 +178,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # rewards += healthy_reward
         # rewards += self.get_distance_from_origin()
         rewards += self.get_timeStep() / 10000
+        rewards += (1 - self.get_closest_food_distance())
         rewards += food_reward
 
         # Costs
@@ -185,7 +186,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # costs = ctrl_cost = self.control_cost(action)
         # costs += self.get_HP_loss() / 10
         # costs = 1 if self.get_HP() <= 0 else 0
-        costs += self.get_penalty() / 1000
+        costs += self.get_penalty() / 100
 
         reward = rewards - costs
 
@@ -201,6 +202,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "x_velocity": x_velocity,
             "y_velocity": y_velocity,
             "food_distances": self.get_food_distances_from_body(),
+            "closest_food_distance": self.get_closest_food_distance(),
             "HP": self.get_HP(),
         }
 
@@ -211,7 +213,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def _get_obs(self):
         position = self.data.qpos.flat.copy()
         velocity = self.data.qvel.flat.copy()
-        food = self.get_food_distances_from_body()
+        # food = self.get_food_distances_from_body()
+        food = [self.get_closest_food_distance()]
         sphere = self.data.geom("sphere").xpos.copy()
 
         # return np.concatenate((position, velocity, food))
@@ -346,3 +349,16 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def get_timeStep(self):
         return self.timeStep
+    
+    # (IBN) Food radar, because I am running out of ideas
+    def get_closest_food_distance(self):
+        food_distance = []
+        for i in self.food_list:
+            if (i in self.food_eaten_list):
+                continue
+            else:
+                food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
+        
+        if (len(food_distance) == 0):
+            return 0
+        return min(food_distance)
