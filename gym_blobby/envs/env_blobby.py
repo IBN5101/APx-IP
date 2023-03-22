@@ -159,8 +159,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         food_found = self.on_body_touches_food()
         if ((food_found is not None) and (food_found not in self.food_eaten_list)):
             self.food_eaten_list.append(food_found)
-            food_HP_bonus = 300
-            self.increase_HP(food_HP_bonus)
+            self.increase_HP()
 
         # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
@@ -170,15 +169,15 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         healthy_reward = self.healthy_reward
         # Food reward calcualtion
         # Each food eaten = +2
-        food_reward = len(self.food_eaten_list) * 2
+        food_reward = len(self.food_eaten_list)
 
         # Rewards
         rewards = 0
         # rewards += forward_reward
         # rewards += healthy_reward
         # rewards += self.get_distance_from_origin()
-        rewards += self.get_timeStep() / 10000
-        rewards += (1 - self.get_closest_food_distance())
+        rewards += self.get_timeStep() / 100000
+        rewards += (1 - self.get_closest_food_distance()) / 10
         rewards += food_reward
 
         # Costs
@@ -204,6 +203,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "food_distances": self.get_food_distances_from_body(),
             "closest_food_distance": self.get_closest_food_distance(),
             "HP": self.get_HP(),
+            "timeStep": self.get_timeStep(),
+            "food_reward": food_reward,
         }
 
         if self.render_mode == "human":
@@ -289,23 +290,29 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             return None
         
     def is_body_touching_floor(self):
-        for i in range(self.data.ncon):
-            contact = self.data.contact[i]
-            body = None
-            if self.data.geom(contact.geom1).name.startswith("sphere"):
-                body = contact.geom1
-            elif self.data.geom(contact.geom2).name.startswith("sphere"):
-                body = contact.geom2
-            floor = None
-            if self.data.geom(contact.geom1).name.startswith("floor"):
-                floor = contact.geom1
-            elif self.data.geom(contact.geom2).name.startswith("floor"):
-                floor = contact.geom2
+        # for i in range(self.data.ncon):
+        #     contact = self.data.contact[i]
+        #     body = None
+        #     if self.data.geom(contact.geom1).name.startswith("sphere"):
+        #         body = contact.geom1
+        #     elif self.data.geom(contact.geom2).name.startswith("sphere"):
+        #         body = contact.geom2
+        #     floor = None
+        #     if self.data.geom(contact.geom1).name.startswith("floor"):
+        #         floor = contact.geom1
+        #     elif self.data.geom(contact.geom2).name.startswith("floor"):
+        #         floor = contact.geom2
 
-            if (body is not None) and (floor is not None):
-                return True
+        #     if (body is not None) and (floor is not None):
+        #         return True
+
+        # This should have been a different function, but I am losing my mind
+        # REMEMBER: MUJOCO USE Z AXIS FOR UP AND DOWN
+        if (self.data.geom("sphere").xpos[2] < 0.25):
+            return True
             
-            return None
+        return None
+
     
     def reset_custom_parameters(self):
         self.food_eaten_list = []
@@ -315,10 +322,11 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
-        self.HP = 500
+        self.HP = 250
 
-    def increase_HP(self, HPUp):
-        self.HP += HPUp
+    def increase_HP(self):
+        # (IBN) THIS IS HARD CODING !!!
+        self.HP += 100
 
     def get_HP(self):
         return self.HP
