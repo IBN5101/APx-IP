@@ -54,6 +54,7 @@
         <!-- Food -->
         <default class="food">
             <geom type="capsule" size="0.11 0.08" />
+            <site type="box" size="0.07 0.07 1.2" rgba="0.6 0.7 0.8 0.1"/>
         </default>
 
         <!-- Site -->
@@ -133,19 +134,22 @@
             <!-- Testing -->
             <!-- <geom name="food0" pos="0 0 0" size="0.05 0.1" class="food" />
             <geom name="foodA" pos="0.5 0 0" size="0.05 0.4" class="food" /> -->
-            <!-- Real -->
+            <!-- Geom food -->
             <geom name="food1" class="food" pos="0.3 0 0"/>
             <geom name="food2" class="food" pos="1 0 0"  />
             <geom name="food3" class="food" pos="2 0 0"  />
             <geom name="food4" class="food" pos="3 0 0"  />
             <geom name="food5" class="food" pos="4 0 0"  />
             <geom name="food6" class="food" pos="-3 0 0"  />
+            <!-- Site food -->
+            <!-- <site name="foodX" class="food" pos="0.3 0 0" /> -->
         </body>
     </worldbody>
 
     <!-- Sensors -->
     <sensor>
         <!-- <touch name="tMain" site="sMain" cutoff="1"/> -->
+        <!-- <touch name="tFood1" site="foodX"/> -->
     </sensor>
 
     <!-- Controls -->

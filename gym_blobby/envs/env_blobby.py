@@ -224,6 +224,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def reset_model(self):
         # (IBN) This really should not be here, but I don't know how to overload reset()
         self.reset_custom_parameters()
+        self.randomize_food_position()
 
         noise_low = -self._reset_noise_scale
         noise_high = self._reset_noise_scale
@@ -262,10 +263,10 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         for i in self.food_list:
             # If food is eaten, set distance to -1
             if (i in self.food_eaten_list):
-                food_distance.append(-1)
+                food_distance.append(10)
             else:
                 food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
-        return food_distance
+        return np.array(food_distance)
     
     def get_distance_from_origin(self):
         return np.linalg.norm(self.data.geom("sphere").xpos, ord=2)
@@ -360,13 +361,26 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     
     # (IBN) Food radar, because I am running out of ideas
     def get_closest_food_distance(self):
-        food_distance = []
-        for i in self.food_list:
-            if (i in self.food_eaten_list):
-                continue
-            else:
-                food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
+        # food_distance = []
+        # for i in self.food_list:
+        #     if (i in self.food_eaten_list):
+        #         continue
+        #     else:
+        #         food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
         
-        if (len(food_distance) == 0):
+        # if (len(food_distance) == 0):
+        #     return 0
+        # return min(food_distance)
+
+        closest_food = np.amin(self.get_food_distances_from_body())
+        if (closest_food == 10):
             return 0
-        return min(food_distance)
+        return closest_food
+    
+    def randomize_food_position(self):
+        for i in self.food_list:
+            if (i == "food1"):
+                continue
+            new_pos = self.np_random.uniform(low=-2.5, high=2.5, size=3)
+            new_pos[2] = 0
+            self.model.geom(i).pos = new_pos
