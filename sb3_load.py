@@ -1,6 +1,7 @@
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3 import PPO
 from stable_baselines3 import DDPG
+from stable_baselines3 import A2C
 
 from gym_blobby.envs.env_blobby import BlobbyEnv
 import gymnasium
@@ -9,7 +10,7 @@ import gymnasium
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 # Surely there is a better way to do this
-total_timesteps = 1 * 1000000
+total_timesteps = 10 * 1000000
 episodes = 10
 # --------------------------------
 part = 10
@@ -26,7 +27,9 @@ sb_path += str(steps_id) + "_steps"
 # 04: DDPG test
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/test_ddpg"
 # 05: Fallback - DDPG v0
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
+# 06: Testing - A2C
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing""
 
 # Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
@@ -35,7 +38,8 @@ env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 # SB3
 check_env(env)
 # model = PPO.load(sb_path)
-model = DDPG.load(sb_path)
+# model = DDPG.load(sb_path)
+model = A2C.load(sb_path)
 
 observation, info = env.reset()
 for _ in range(10000):

@@ -2,6 +2,7 @@ from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3 import PPO
 from stable_baselines3 import DDPG
+from stable_baselines3 import A2C
 
 from gym_blobby.envs.env_blobby import BlobbyEnv
 import gymnasium
@@ -23,7 +24,8 @@ def sb3_save():
 
     # SB3 algorithms
     # model = PPO("MlpPolicy", env, verbose=0)
-    model = DDPG("MlpPolicy", env, verbose=0)
+    # model = DDPG("MlpPolicy", env, verbose=0)
+    model = A2C("MlpPolicy", env, verbose=0)
     # Estimations:
     # <!> PPO
     #   1M steps = 41 mins
@@ -33,7 +35,10 @@ def sb3_save():
     # <!> DDPG
     # 300k steps = 3 hours
     #   1M steps = 6 hours
-    total_timesteps = 1 * 1000000
+    # <!> A2C
+    #   1M steps = 50 mins
+    #  10M steps = 8 hours
+    total_timesteps = 10 * 1000000
     episodes = 10
 
     episode_timesteps = total_timesteps / episodes
