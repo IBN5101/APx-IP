@@ -12,7 +12,7 @@ import gymnasium
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 # Surely there is a better way to do this
-total_timesteps = 0.08 * 1000000
+total_timesteps = 1 * 1000000
 episodes = 10
 # --------------------------------
 part = 10
@@ -29,7 +29,7 @@ sb_path += str(steps_id) + "_steps"
 # 04: DDPG test
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/test_ddpg"
 # 05: Fallback - DDPG v0
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
 # 06: Testing - A2C
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 
@@ -40,9 +40,9 @@ env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 # SB3
 check_env(env)
 # model = PPO.load(sb_path)
-model = DDPG.load(sb_path)
+# model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
-# model = SAC.load(sb_path)
+model = SAC.load(sb_path)
 # model = TD3.load(sb_path)
 
 observation, info = env.reset()

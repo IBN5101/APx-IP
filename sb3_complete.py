@@ -12,6 +12,7 @@ import gymnasium
 # Settings
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/"
+tb_log = "/home/vboxuser/Desktop/HQplus/CS3IP/tb_log/"
 
 # Notes
 # Idea 1: Change food to not be one-time reward
@@ -25,11 +26,11 @@ def sb3_save():
     check_env(env)
 
     # SB3 algorithms
-    # model = PPO("MlpPolicy", env, verbose=0)
-    # model = DDPG("MlpPolicy", env, verbose=0)
-    # model = A2C("MlpPolicy", env, verbose=0)
-    model = SAC("MlpPolicy", env, verbose=0)
-    # model = TD3("MlpPolicy", env, verbose=0)
+    model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
     # Estimations:
     # <!> PPO
     #   1M steps = 41 mins
@@ -43,10 +44,10 @@ def sb3_save():
     #   1M steps = 50 mins
     #  10M steps = 8 hours
     # <!> SAC
-    #
+    #   1M steps = 10 hours
     # <!> TD3
     #
-    total_timesteps = 0.08 * 1000000
+    total_timesteps = 0.1 * 1000000
     episodes = 10
 
     episode_timesteps = total_timesteps / episodes
