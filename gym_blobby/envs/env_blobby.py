@@ -176,7 +176,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # rewards += forward_reward
         # rewards += healthy_reward
         # rewards += self.get_distance_from_origin()
-        rewards += self.get_timeStep() / 100000
+        # rewards += self.get_timeStep() / 100000
         rewards += (1 - self.get_closest_food_distance()) / 10
         rewards += food_reward
 
@@ -222,10 +222,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         return np.concatenate((position, velocity, food, sphere))
 
     def reset_model(self):
-        # (IBN) This really should not be here, but I don't know how to overload reset()
-        self.reset_custom_parameters()
-        self.randomize_food_position()
-
         noise_low = -self._reset_noise_scale
         noise_high = self._reset_noise_scale
 
@@ -237,6 +233,10 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             + self._reset_noise_scale * self.np_random.standard_normal(self.model.nv)
         )
         self.set_state(qpos, qvel)
+
+        # (IBN) This really should not be here, but I don't know how to overload reset()
+        self.reset_custom_parameters()
+        self.randomize_food_position()
 
         observation = self._get_obs()
 

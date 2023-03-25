@@ -1,5 +1,6 @@
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import CheckpointCallback
+from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 from stable_baselines3 import DDPG
 from stable_baselines3 import A2C
@@ -12,7 +13,8 @@ import gymnasium
 # Settings
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/"
-tb_log = "/home/vboxuser/Desktop/HQplus/CS3IP/tb_log/"
+log_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
+monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 
 # Notes
 # Idea 1: Change food to not be one-time reward
@@ -22,15 +24,17 @@ tb_log = "/home/vboxuser/Desktop/HQplus/CS3IP/tb_log/"
 
 def sb3_save():
     env = BlobbyEnv(render_mode=None, xml_file=xml_path)
+    env = Monitor(env, filename=monitor_path, info_keywords=("food_reward",))
 
     check_env(env)
 
     # SB3 algorithms
-    model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
     # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
     # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
     # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
-    # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
+    model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+
     # Estimations:
     # <!> PPO
     #   1M steps = 41 mins
@@ -46,8 +50,8 @@ def sb3_save():
     # <!> SAC
     #   1M steps = 10 hours
     # <!> TD3
-    #
-    total_timesteps = 0.1 * 1000000
+    #   1M steps = 7 hours
+    total_timesteps = 1 * 1000000
     episodes = 10
 
     episode_timesteps = total_timesteps / episodes

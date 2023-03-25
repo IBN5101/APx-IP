@@ -42,8 +42,8 @@ check_env(env)
 # model = PPO.load(sb_path)
 # model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
-model = SAC.load(sb_path)
-# model = TD3.load(sb_path)
+# model = SAC.load(sb_path)
+model = TD3.load(sb_path)
 
 observation, info = env.reset()
 for _ in range(10000):
