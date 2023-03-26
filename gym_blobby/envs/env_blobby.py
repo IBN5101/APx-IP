@@ -153,13 +153,19 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         xy_position_after = self.get_body_com("blobby")[:2].copy()
 
         # (IBN) Extra step calculation
-        self.step_blobby()
+        HP_loss = 1
+        if (self.is_body_touching_floor()):
+            self.increase_penalty()
+            HP_loss = 20
+        self.HP -= HP_loss
+        self.timeStep += 1
 
         # (IBN) Observe food
-        food_found = self.on_body_touches_food()
-        if ((food_found is not None) and (food_found not in self.food_eaten_list)):
-            self.food_eaten_list.append(food_found)
-            self.increase_HP()
+        # food_found = self.on_body_touches_food()
+        # if ((food_found is not None) and (food_found not in self.food_eaten_list)):
+        #     self.food_eaten_list.append(food_found)
+        #     self.increase_HP()
+        self.observe_food()
 
         # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
@@ -196,8 +202,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "reward_survive": healthy_reward,
             "x_position": xy_position_after[0],
             "y_position": xy_position_after[1],
-            "distance_from_origin_SB3": np.linalg.norm(xy_position_after, ord=2),
-            "distance_from_origin_IBN": self.get_distance_from_origin(),
             "x_velocity": x_velocity,
             "y_velocity": y_velocity,
             "food_distances": self.get_food_distances_from_body(),
@@ -205,6 +209,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "HP": self.get_HP(),
             "timeStep": self.get_timeStep(),
             "food_reward": food_reward,
+            "sensor_data": self.get_sensor_data(),
         }
 
         if self.render_mode == "human":
@@ -245,14 +250,22 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     # --------------------------------------------------------------
     # (IBN) Extra modification
     # --------------------------------------------------------------
-    def initialize_food(self):
+    def reset_custom_parameters(self):
         self.food_eaten_list = []
+        self.initialize_HP()
+        self.initialize_penalty()
+        self.initialize_timeStep()
+    
+    def initialize_food(self):
         self.food_list = []
-        for i in range(self.model.ngeom):
-            if (self.model.geom(i).name.startswith("food")):
-                self.food_list.append(self.model.geom(i).name)
+        self.food_eaten_list = []
+        self.food_progress = {}
+        for i in range(self.model.nsensor):
+            if (self.model.sensor(i).name.startswith("vFood")):
+                self.food_list.append(self.model.sensor(i).name)
+                self.food_progress[self.model.sensor(i).name] = 0
 
-    def get_food_list(self):
+    def get_food_list_string(self):
         result = ""
         for i in self.food_list:
             result += i + " "
@@ -263,63 +276,66 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         for i in self.food_list:
             # If food is eaten, set distance to -1
             if (i in self.food_eaten_list):
-                food_distance.append(10)
+                food_distance.append(100)
             else:
-                food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
+                food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.site(i).xpos))
         return np.array(food_distance)
     
-    def get_distance_from_origin(self):
-        return np.linalg.norm(self.data.geom("sphere").xpos, ord=2)
+    def observe_food(self):
+        # (IBN) THIS IS HARD CODING
+        food_progress_threshold = 25
+        for i in self.food_list:
+            if (i not in self.food_eaten_list):
+                if (self.data.sensor(i).data[0] > 0):
+                    self.food_progress[i] += 1
+                    if (self.food_progress[i] >= food_progress_threshold):
+                        self.food_eaten_list.append(i)
+                        self.increase_HP()
     
-    def on_body_touches_food(self):
-        for i in range(self.data.ncon):
-            contact = self.data.contact[i]
-            body = None
-            if self.data.geom(contact.geom1).name.startswith("sphere"):
-                body = contact.geom1
-            elif self.data.geom(contact.geom2).name.startswith("sphere"):
-                body = contact.geom2
-            food = None
-            if self.data.geom(contact.geom1).name.startswith("food"):
-                food = contact.geom1
-            elif self.data.geom(contact.geom2).name.startswith("food"):
-                food = contact.geom2
+    # def on_body_touches_food(self):
+    #     for i in range(self.data.ncon):
+    #         contact = self.data.contact[i]
+    #         body = None
+    #         if self.data.geom(contact.geom1).name.startswith("sphere"):
+    #             body = contact.geom1
+    #         elif self.data.geom(contact.geom2).name.startswith("sphere"):
+    #             body = contact.geom2
+    #         food = None
+    #         if self.data.geom(contact.geom1).name.startswith("food"):
+    #             food = contact.geom1
+    #         elif self.data.geom(contact.geom2).name.startswith("food"):
+    #             food = contact.geom2
 
-            if (body is not None) and (food is not None):
-                return self.data.geom(food).name
+    #         if (body is not None) and (food is not None):
+    #             return self.data.geom(food).name
             
-            return None
+    #         return None
+        
+    # (IBN) Food radar, because I am running out of ideas
+    def get_closest_food_distance(self):
+        closest_food = np.amin(self.get_food_distances_from_body())
+        if (closest_food == 100):
+            return 0
+        return closest_food
+    
+    def randomize_food_position(self):
+        for i in self.food_list:
+            if (i == "vFood1"):
+                continue
+            while True:
+                new_pos = self.np_random.uniform(low=-3, high=3, size=3)
+                new_pos[2] = 0
+                if (np.greater(np.absolute(new_pos), 1).any()):
+                    break
+            self.model.site(i).pos = new_pos
         
     def is_body_touching_floor(self):
-        # for i in range(self.data.ncon):
-        #     contact = self.data.contact[i]
-        #     body = None
-        #     if self.data.geom(contact.geom1).name.startswith("sphere"):
-        #         body = contact.geom1
-        #     elif self.data.geom(contact.geom2).name.startswith("sphere"):
-        #         body = contact.geom2
-        #     floor = None
-        #     if self.data.geom(contact.geom1).name.startswith("floor"):
-        #         floor = contact.geom1
-        #     elif self.data.geom(contact.geom2).name.startswith("floor"):
-        #         floor = contact.geom2
-
-        #     if (body is not None) and (floor is not None):
-        #         return True
-
         # This should have been a different function, but I am losing my mind
         # REMEMBER: MUJOCO USE Z AXIS FOR UP AND DOWN
         if (self.data.geom("sphere").xpos[2] < 0.25):
             return True
             
         return None
-
-    
-    def reset_custom_parameters(self):
-        self.food_eaten_list = []
-        self.initialize_HP()
-        self.initialize_penalty()
-        self.initialize_timeStep()
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
@@ -340,16 +356,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def get_penalty(self):
         return self.penalty
-    
-    def step_blobby(self):
-        # (IBN) TODO: REFACTOR THIS
-        HP_loss = 1
-        if (self.is_body_touching_floor()):
-            self.increase_penalty()
-            HP_loss = 20
-
-        self.HP -= HP_loss
-        self.timeStep += 1
 
     def initialize_timeStep(self):
         # I am sure that there is a built-in variable for this,
@@ -358,29 +364,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def get_timeStep(self):
         return self.timeStep
-    
-    # (IBN) Food radar, because I am running out of ideas
-    def get_closest_food_distance(self):
-        # food_distance = []
-        # for i in self.food_list:
-        #     if (i in self.food_eaten_list):
-        #         continue
-        #     else:
-        #         food_distance.append(np.linalg.norm(self.data.geom("sphere").xpos - self.data.geom(i).xpos))
-        
-        # if (len(food_distance) == 0):
-        #     return 0
-        # return min(food_distance)
 
-        closest_food = np.amin(self.get_food_distances_from_body())
-        if (closest_food == 10):
-            return 0
-        return closest_food
-    
-    def randomize_food_position(self):
-        for i in self.food_list:
-            if (i == "food1"):
-                continue
-            new_pos = self.np_random.uniform(low=-2.5, high=2.5, size=3)
-            new_pos[2] = 0
-            self.model.geom(i).pos = new_pos
+    def get_sensor_data(self):
+        return self.data.sensordata.copy()

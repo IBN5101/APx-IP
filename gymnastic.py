@@ -9,9 +9,9 @@ for _ in range(1000):
     action = env.action_space.sample()
     observation, reward, terminated, truncated, info = env.step(action)
     # print(info["food_distances"].round(2))
-    print(info["closest_food_distance"].round(3))
-    # print(observation[:3])
-    # print(str(info["food_reward"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 4)))
+    # print(info["closest_food_distance"].round(3))
+    print(str(info["food_reward"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 4)))
+    # print(info["sensor_data"])
     
     if terminated or truncated:
         observation, info = env.reset()

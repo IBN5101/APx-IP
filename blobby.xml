@@ -54,7 +54,7 @@
         <!-- Food -->
         <default class="food">
             <geom type="capsule" size="0.11 0.08" />
-            <site type="box" size="0.07 0.07 1.2" rgba="0.6 0.7 0.8 0.1"/>
+            <site type="box" size="0.07 0.07 0.3" rgba="0.4 1 0.4 0.1"/>
         </default>
 
         <!-- Site -->
@@ -132,24 +132,42 @@
         <!-- Other world bodies -->
         <body>
             <!-- Testing -->
-            <!-- <geom name="food0" pos="0 0 0" size="0.05 0.1" class="food" />
-            <geom name="foodA" pos="0.5 0 0" size="0.05 0.4" class="food" /> -->
+            <site type="box" size="1 1 0.1" rgba="1 1 1 0.1"/> 
             <!-- Geom food -->
-            <geom name="food1" class="food" pos="0.6 0 0"/>
+            <!-- <geom name="food1" class="food" pos="0.6 0 0"/>
             <geom name="food2" class="food" pos="1 0 0"  />
             <geom name="food3" class="food" pos="2 0 0"  />
             <geom name="food4" class="food" pos="3 0 0"  />
             <geom name="food5" class="food" pos="4 0 0"  />
-            <geom name="food6" class="food" pos="-3 0 0"  />
+            <geom name="food6" class="food" pos="-3 0 0"  /> -->
             <!-- Site food -->
-            <!-- <site name="foodX" class="food" pos="0.3 0 0" /> -->
+            <site name="vFood1" class="food" pos="0.5 0 0" />
+            <site name="vFood2" class="food" pos="-1 0 0" />
+            <site name="vFood3" class="food" pos="2 0 0" />
+            <site name="vFood4" class="food" pos="-2 0 0" />
+            <site name="vFood5" class="food" pos="3 0 0" />
+            <site name="vFood6" class="food" pos="-3 0 0" />
+            <site name="vFood7" class="food" pos="4 0 0" />
+            <site name="vFood8" class="food" pos="-4 0 0" />
+            <site name="vFood9" class="food" pos="5 0 0" />
+            <site name="vFood10" class="food" pos="-5 0 0" />
         </body>
     </worldbody>
 
     <!-- Sensors -->
     <sensor>
         <!-- <touch name="tMain" site="sMain" cutoff="1"/> -->
-        <!-- <touch name="tFood1" site="foodX"/> -->
+        <rangefinder name="vFood1" site="vFood1"/>
+        <rangefinder name="vFood2" site="vFood2"/>
+        <rangefinder name="vFood3" site="vFood3"/>
+        <rangefinder name="vFood4" site="vFood4"/>
+        <rangefinder name="vFood5" site="vFood5"/>
+        <rangefinder name="vFood6" site="vFood6"/>
+        <rangefinder name="vFood7" site="vFood7"/>
+        <rangefinder name="vFood8" site="vFood8"/>
+        <rangefinder name="vFood9" site="vFood9"/>
+        <rangefinder name="vFood10" site="vFood10"/>
+
     </sensor>
 
     <!-- Controls -->

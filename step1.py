@@ -50,15 +50,17 @@ print("Simulation completed")
 # for i in range(model.ngeom):
 #     if (model.geom(i).name.startswith("food")):
 #         foodList.append(model.geom(i).name)
-
 # for food in foodList:
 #     print(data.geom(food).name)
 
 # Food distance
-print(data.geom("food1").xpos)
-print(data.geom("sphere").xpos)
-dist = np.linalg.norm(data.geom("food1").xpos - data.geom("sphere").xpos)
-print(dist)
+# print(data.geom("food1").xpos)
+# print(data.geom("sphere").xpos)
+# dist = np.linalg.norm(data.geom("food1").xpos - data.geom("sphere").xpos)
+# print(dist)
+
+# Food sensor
+print(data.sensor("vFood1"))
 
 # ----------------------------
 # Simulation #2
