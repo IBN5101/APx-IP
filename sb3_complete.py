@@ -29,11 +29,11 @@ def sb3_save():
     check_env(env)
 
     # SB3 algorithms
-    # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
-    # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
-    # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
-    # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=tb_log)
-    model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
     # Estimations:
     # <!> PPO
@@ -44,6 +44,7 @@ def sb3_save():
     # <!> DDPG
     # 300k steps = 3 hours
     #   1M steps = 6 hours
+    #   2M steps = 12 hours
     # <!> A2C
     #   1M steps = 50 mins
     #  10M steps = 8 hours
@@ -51,7 +52,7 @@ def sb3_save():
     #   1M steps = 10 hours
     # <!> TD3
     #   1M steps = 7 hours
-    total_timesteps = 1 * 1000000
+    total_timesteps = 2 * 1000000
     episodes = 10
 
     episode_timesteps = total_timesteps / episodes

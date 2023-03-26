@@ -53,7 +53,7 @@
 
         <!-- Food -->
         <default class="food">
-            <geom type="capsule" size="0.11 0.07" />
+            <geom type="capsule" size="0.11 0.08" />
             <site type="box" size="0.07 0.07 1.2" rgba="0.6 0.7 0.8 0.1"/>
         </default>
 

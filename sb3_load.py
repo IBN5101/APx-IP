@@ -12,7 +12,7 @@ import gymnasium
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 # Surely there is a better way to do this
-total_timesteps = 1 * 1000000
+total_timesteps = 2 * 1000000
 episodes = 10
 # --------------------------------
 part = 10
@@ -40,10 +40,10 @@ env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 # SB3
 check_env(env)
 # model = PPO.load(sb_path)
-# model = DDPG.load(sb_path)
+model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
 # model = SAC.load(sb_path)
-model = TD3.load(sb_path)
+# model = TD3.load(sb_path)
 
 observation, info = env.reset()
 for _ in range(10000):
