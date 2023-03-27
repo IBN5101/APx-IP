@@ -165,7 +165,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # if ((food_found is not None) and (food_found not in self.food_eaten_list)):
         #     self.food_eaten_list.append(food_found)
         #     self.increase_HP()
-        self.observe_food()
+        food_eaten_this_step = self.observe_food()
 
         # Forward reward calcualtion
         xy_velocity = (xy_position_after - xy_position_before) / self.dt
@@ -174,8 +174,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # Healthy reward calculation
         healthy_reward = self.healthy_reward
         # Food reward calcualtion
-        # Each food eaten = +2
-        food_reward = len(self.food_eaten_list)
+        # Each food eaten = +1
+        # food_reward = len(self.food_eaten_list)
+        food_reward = food_eaten_this_step
 
         # Rewards
         rewards = 0
@@ -183,7 +184,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # rewards += healthy_reward
         # rewards += self.get_distance_from_origin()
         # rewards += self.get_timeStep() / 100000
-        rewards += (1 - self.get_closest_food_distance()) / 10
+        rewards += (1 - self.get_closest_food_distance()) / 10000
         rewards += food_reward
 
         # Costs
@@ -208,7 +209,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "closest_food_distance": self.get_closest_food_distance(),
             "HP": self.get_HP(),
             "timeStep": self.get_timeStep(),
-            "food_reward": food_reward,
+            "food_eaten_total": len(self.food_eaten_list),
             "sensor_data": self.get_sensor_data(),
         }
 
@@ -283,7 +284,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     
     def observe_food(self):
         # (IBN) THIS IS HARD CODING
-        food_progress_threshold = 25
+        food_eaten_this_step = 0
+        food_progress_threshold = 20
         for i in self.food_list:
             if (i not in self.food_eaten_list):
                 if (self.data.sensor(i).data[0] > 0):
@@ -291,6 +293,9 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
                     if (self.food_progress[i] >= food_progress_threshold):
                         self.food_eaten_list.append(i)
                         self.increase_HP()
+                        food_eaten_this_step += 1
+        
+        return food_eaten_this_step
     
     # def on_body_touches_food(self):
     #     for i in range(self.data.ncon):

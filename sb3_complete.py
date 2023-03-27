@@ -30,10 +30,10 @@ def sb3_save():
 
     # SB3 algorithms
     # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-    # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
     # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
     # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-    model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
     # Estimations:
     # <!> PPO

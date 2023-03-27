@@ -29,7 +29,7 @@ sb_path += str(steps_id) + "_steps"
 # 04: DDPG test
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/test_ddpg"
 # 05: Fallback - DDPG v0
-# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
+sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
 # 06: Testing - A2C
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 
@@ -40,17 +40,17 @@ env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 # SB3
 check_env(env)
 # model = PPO.load(sb_path)
-# model = DDPG.load(sb_path)
+model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
 # model = SAC.load(sb_path)
-model = TD3.load(sb_path)
+# model = TD3.load(sb_path)
 
 observation, info = env.reset()
 for _ in range(10000):
     # action = env.action_space.sample()
     action, _states = model.predict(observation)
     observation, reward, terminated, truncated, info = env.step(action)
-    print(str(info["food_reward"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 4)))
+    print(str(info["food_eaten_total"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 4)))
 
     # Debug:
     # print(info["closest_food_distance"])
