@@ -30,10 +30,10 @@ def sb3_save():
 
     # SB3 algorithms
     # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-    model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
     # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
     # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-    # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+    model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
     # Estimations:
     # <!> PPO
@@ -52,7 +52,7 @@ def sb3_save():
     #   1M steps = 10 hours
     # <!> TD3
     #   1M steps = 7 hours
-    total_timesteps = 2 * 1000000
+    total_timesteps = 1 * 1000000
     episodes = 10
 
     episode_timesteps = total_timesteps / episodes
