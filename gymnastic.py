@@ -11,7 +11,6 @@ for _ in range(1000):
     # print(info["food_distances"].round(2))
     # print(info["closest_food_distance"].round(3))
     print(str(info["food_eaten_total"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 6)))
-    # print(info["sensor_data"])
     
     if terminated or truncated:
         observation, info = env.reset()

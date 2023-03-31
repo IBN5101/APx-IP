@@ -192,7 +192,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         # costs = ctrl_cost = self.control_cost(action)
         # costs += self.get_HP_loss() / 10
         # costs = 1 if self.get_HP() <= 0 else 0
-        costs += self.get_penalty() / 100
+        costs += -0.01 if self.is_body_touching_floor() else 0
 
         reward = rewards - costs
 
@@ -210,7 +210,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "HP": self.get_HP(),
             "timeStep": self.get_timeStep(),
             "food_eaten_total": len(self.food_eaten_list),
-            "sensor_data": self.get_sensor_data(),
         }
 
         if self.render_mode == "human":
@@ -337,7 +336,8 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def is_body_touching_floor(self):
         # This should have been a different function, but I am losing my mind
         # REMEMBER: MUJOCO USE Z AXIS FOR UP AND DOWN
-        if (self.data.geom("sphere").xpos[2] < 0.25):
+        floor_threshold = 0.26
+        if (self.data.geom("sphere").xpos[2] < floor_threshold):
             return True
             
         return None

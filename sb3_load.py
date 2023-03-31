@@ -15,7 +15,7 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 total_timesteps = 1 * 1000000
 episodes = 10
 # --------------------------------
-part = 9
+part = 10
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
@@ -29,7 +29,7 @@ sb_path += str(steps_id) + "_steps"
 # 04: DDPG test
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/test_ddpg"
 # 05: Fallback - DDPG v0
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
 # 06: Testing - A2C
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 
@@ -50,7 +50,7 @@ for _ in range(10000):
     # action = env.action_space.sample()
     action, _states = model.predict(observation)
     observation, reward, terminated, truncated, info = env.step(action)
-    print(str(info["food_eaten_total"]) + "\t" + str(info["HP"]) + "\t" + str(round(reward, 4)))
+    print(str(info["food_eaten_total"]) + "\t" + str(info["HP"]) + "\t" + str(round(info["closest_food_distance"], 4)))
 
     # Debug:
     # print(info["closest_food_distance"])
