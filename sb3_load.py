@@ -15,7 +15,7 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 total_timesteps = 15 * 1000000
 episodes = 10
 # --------------------------------
-part = 10
+part = 8
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
@@ -32,6 +32,8 @@ sb_path += str(steps_id) + "_steps"
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/DDPG_fallback_v0"
 # 06: Testing - A2C (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
+# 07: Fallback - PPO v1 
+sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
 
 # Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)

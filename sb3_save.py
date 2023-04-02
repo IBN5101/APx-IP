@@ -40,6 +40,7 @@ model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 #   3M steps = 2 hours
 #   5M steps = 3 hours
 #  10M steps = 6 hours
+#  15M steps = 11 hours
 # <!> DDPG
 # 300k steps = 3 hours
 #   1M steps = 6 hours
