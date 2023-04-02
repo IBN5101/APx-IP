@@ -65,20 +65,24 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             exclude_current_positions_from_observation
         )
 
-        # (IBN) Observation space
-        # Joint position:
-        # - Free joint = 7
-        # - Fixed joint = 1
-        # Joint velocity:
-        # - Free joint = 6
-        # - Fixed joint = 1
-        # Blobby has 1 free joint and 12 fixed joint
-        # obs_space += (7 + 12 * 1) + (6 + 12 * 1) = 37
         # [!!!] HARD CODING BECAUSE THE MODEL IS INITIALIZED AFTER THE OBSERVATION SPACE
-        # Food count = 1 (closest food)
+        # (IBN) Observation space
+        # - Joint position:
+        #   Free joint = 7
+        #   Fixed joint = 1
+        # - Joint velocity:
+        #   Free joint = 6
+        #   Fixed joint = 1
+        # - Blobby has 1 free joint and 12 fixed joint
+        # obs_space += (7 + 12 * 1) + (6 + 12 * 1) = 37
+        # - Sphere xpos [z] = 1
         # obs_space += 1 = 38
-        # Sphere xpos = 3
-        # obs_space += 3 = 41
+        # - Closest food = 1
+        # obs_space += 1 = 39
+        # - Food eaten count = 1
+        # obs_space += 1 = 40
+        # - Current HP = 1
+        # obs_space += 1 = 41
         obs_shape = 41
 
         observation_space = Box(
@@ -188,11 +192,12 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         rewards += food_reward
 
         # Costs
+        # [!!!] COSTS ARE POSITIVE
         costs = 0
         # costs = ctrl_cost = self.control_cost(action)
         # costs += self.get_HP_loss() / 10
         # costs = 1 if self.get_HP() <= 0 else 0
-        costs += -0.01 if self.is_body_touching_floor() else 0
+        costs += 0.05 if self.is_body_touching_floor() else 0
 
         reward = rewards - costs
 
@@ -200,7 +205,6 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         observation = self._get_obs()
         info = {
             "reward_forward": forward_reward,
-            "reward_survive": healthy_reward,
             "x_position": xy_position_after[0],
             "y_position": xy_position_after[1],
             "x_velocity": x_velocity,
@@ -210,6 +214,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             "HP": self.get_HP(),
             "timeStep": self.get_timeStep(),
             "food_eaten_total": len(self.food_eaten_list),
+            "penalty": self.get_penalty(),
         }
 
         if self.render_mode == "human":
@@ -220,11 +225,13 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         position = self.data.qpos.flat.copy()
         velocity = self.data.qvel.flat.copy()
         # food = self.get_food_distances_from_body()
-        food = [self.get_closest_food_distance()]
-        sphere = self.data.geom("sphere").xpos.copy()
+        sphereZ = [self.data.geom("sphere").xpos.copy()[2]]
+        closest_food = [self.get_closest_food_distance()]
+        food_eaten_count = [len(self.food_eaten_list)]
+        currentHP = [self.get_HP()]
 
         # return np.concatenate((position, velocity, food))
-        return np.concatenate((position, velocity, food, sphere))
+        return np.concatenate((position, velocity, sphereZ, closest_food, food_eaten_count, currentHP))
 
     def reset_model(self):
         noise_low = -self._reset_noise_scale
@@ -284,7 +291,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def observe_food(self):
         # (IBN) THIS IS HARD CODING
         food_eaten_this_step = 0
-        food_progress_threshold = 20
+        food_progress_threshold = 10
         for i in self.food_list:
             if (i not in self.food_eaten_list):
                 if (self.data.sensor(i).data[0] > 0):
@@ -344,7 +351,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
-        self.HP = 250
+        self.HP = 300
 
     def increase_HP(self):
         # (IBN) THIS IS HARD CODING !!!
