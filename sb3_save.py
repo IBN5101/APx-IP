@@ -28,8 +28,8 @@ env = Monitor(env, filename=monitor_path, info_keywords=("food_eaten_total","pen
 check_env(env)
 
 # SB3 algorithms
-model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-# model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+# model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
@@ -52,7 +52,7 @@ model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 #   1M steps = 10 hours
 # <!> TD3
 #   1M steps = 7 hours
-total_timesteps = 15 * 1000000
+total_timesteps = 2 * 1000000
 episodes = 10
 
 episode_timesteps = total_timesteps / episodes

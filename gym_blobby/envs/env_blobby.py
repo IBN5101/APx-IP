@@ -291,6 +291,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
     def observe_food(self):
         # (IBN) THIS IS HARD CODING
         food_eaten_this_step = 0
+
         food_progress_threshold = 10
         for i in self.food_list:
             if (i not in self.food_eaten_list):
@@ -351,7 +352,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
 
     def initialize_HP(self):
         # (IBN) THIS IS HARD CODING !!!
-        self.HP = 300
+        self.HP = 200
 
     def increase_HP(self):
         # (IBN) THIS IS HARD CODING !!!

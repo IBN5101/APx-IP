@@ -12,10 +12,10 @@ import gymnasium
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 # Surely there is a better way to do this
-total_timesteps = 15 * 1000000
+total_timesteps = 2 * 1000000
 episodes = 10
 # --------------------------------
-part = 8
+part = 10
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"

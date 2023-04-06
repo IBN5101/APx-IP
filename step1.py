@@ -60,7 +60,10 @@ print("Simulation completed")
 # print(dist)
 
 # Food sensor
-print(data.sensor("vFood1"))
+# print(data.sensor("vFood1"))
+
+# RGBA?
+print(data.site("vFood1"))
 
 # ----------------------------
 # Simulation #2
