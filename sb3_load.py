@@ -37,7 +37,7 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
 
 print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 
-# (IBN) Check if this matches sb3_save.py settings
+# (IBN) Check if this matches sb3_save.py settings (except render_mode)
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 check_env(env)
 # SB3

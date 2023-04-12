@@ -16,14 +16,8 @@ sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/"
 log_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 # Retrain (PPO)
-# UPDATE PER TRAINING
+# UPDATE PER RE-TRAINING
 retrain_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/PPO_retrain_v2.1a"
-
-# Notes
-# Idea 1: Change food to not be one-time reward
-# Idea 2: Exponential reward to distance to food
-# Idea 3: Termination with health. Health = 100, decrease on time, increase on food.
-# Idea 4: Death = -1, Food = +1, HP / 10000?
 
 # Env setup
 env = BlobbyEnv(render_mode=None, xml_file=xml_path)
@@ -44,22 +38,22 @@ model = PPO.load(retrain_path, env=env)
 total_timesteps = 10 * 1000000
 episodes = 10
 # Estimations:
-# <!> PPO
+# > PPO
 #   1M steps = 41 mins
 #   3M steps = 2 hours
 #   5M steps = 3 hours
 #  10M steps = 6 hours
 #  15M steps = 11 hours
-# <!> DDPG
+# > DDPG
 # 300k steps = 3 hours
 #   1M steps = 6 hours
 #   2M steps = 12 hours
-# <!> A2C
+# > A2C
 #   1M steps = 50 mins
 #  10M steps = 8 hours
-# <!> SAC
+# > SAC
 #   1M steps = 10 hours
-# <!> TD3
+# > TD3
 #   1M steps = 7 hours
 
 episode_timesteps = total_timesteps / episodes

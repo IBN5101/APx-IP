@@ -2,7 +2,7 @@ from env_blobby import BlobbyEnv
 
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 
-env = BlobbyEnv(render_mode="human", xml_file=xml_path, terminate_when_unhealthy=False)
+env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 
 observation, info = env.reset(seed=42)
 for _ in range(1000):

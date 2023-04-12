@@ -85,12 +85,16 @@
             <freejoint name="root"/>
             <geom name="sphere" size="0.2" density="750"/>
 
+            <!-- Legs/Thighs? -->
             <body name="thigh1" pos="0.2 0 0">
                 <!-- Horizontal joint -->
                 <joint name="thigh1_xz" axis="0 0 1" class="bthigh_xz" />
                 <!-- Vertical joint -->
                 <joint name="thigh1_y" axis="0 -1 0" class="bthigh_y" />
+
                 <geom name="thigh1" type="capsule" fromto="0 0 0 0.25 0 0" size="0.06" />
+
+                <!-- Shin + Knee -->
                 <body name="shin1" pos="0.25 0 0">
                     <joint name="knee1" axis="0 -1 0" class="knee" />
                     <geom name="shin1" class="shin" fromto="0 0 0 0 0 -0.5"/>
@@ -126,22 +130,13 @@
                     <geom name="shin4" class="shin" fromto="0 0 0 0 0 -0.5"/>
                 </body>
             </body>
-
-            <!-- <site name="sMain" pos="0 0 -0.21" class="site"/> -->
         </body>
 
         <!-- Other world bodies -->
         <body>
             <!-- Testing -->
             <site type="box" size="1 1 0.05" rgba="1 1 1 0.1"/> 
-            <!-- Geom food -->
-            <!-- <geom name="food1" class="food" pos="0.6 0 0"/>
-            <geom name="food2" class="food" pos="1 0 0"  />
-            <geom name="food3" class="food" pos="2 0 0"  />
-            <geom name="food4" class="food" pos="3 0 0"  />
-            <geom name="food5" class="food" pos="4 0 0"  />
-            <geom name="food6" class="food" pos="-3 0 0"  /> -->
-            <!-- Site food -->
+            <!-- Foods (site) -->
             <site name="vFood1" class="food" pos="0.5 0 0" />
             <site name="vFood2" class="food" pos="-1 0 0" />
             <site name="vFood3" class="food" pos="2 0 0" />
@@ -157,7 +152,6 @@
 
     <!-- Sensors -->
     <sensor>
-        <!-- <touch name="tMain" site="sMain" cutoff="1"/> -->
         <rangefinder name="vFood1" site="vFood1"/>
         <rangefinder name="vFood2" site="vFood2"/>
         <rangefinder name="vFood3" site="vFood3"/>
@@ -173,7 +167,7 @@
 
     <!-- Controls -->
     <actuator>
-        <!-- Thigh motor -->
+        <!-- Thigh motors -->
         <motor name="thigh1_xz" class="blobby_motor" joint="thigh1_xz" />
         <motor name="thigh1_y"  class="blobby_motor" joint="thigh1_y" />
         <motor name="thigh2_xz" class="blobby_motor" joint="thigh2_xz" />
@@ -182,10 +176,5 @@
         <motor name="thigh3_y"  class="blobby_motor" joint="thigh3_y" />
         <motor name="thigh4_xz" class="blobby_motor" joint="thigh4_xz" />
         <motor name="thigh4_y"  class="blobby_motor" joint="thigh4_y" />
-        <!-- Knee motor -->
-        <!-- <motor name="knee1"     class="blobby_motor" joint="knee1" /> -->
-        <!-- <motor name="knee2"     class="blobby_motor" joint="knee2" /> -->
-        <!-- <motor name="knee3"     class="blobby_motor" joint="knee3" /> -->
-        <!-- <motor name="knee4"     class="blobby_motor" joint="knee4" /> -->
     </actuator>
 </mujoco>
