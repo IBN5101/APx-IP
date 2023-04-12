@@ -27,7 +27,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         food_HP_increase=100,
         food_progress_threshold=10,
         floor_z_threshold=0.26,
-        HP_loss_upon_touching_floor=10,
+        floor_HP_loss=10,
         **kwargs
     ):
         utils.EzPickle.__init__(
@@ -38,7 +38,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
             food_HP_increase,
             food_progress_threshold,
             floor_z_threshold,
-            HP_loss_upon_touching_floor,
+            floor_HP_loss,
             **kwargs
         )
 
@@ -48,7 +48,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         self._food_HP_increase = food_HP_increase
         self._food_progress_threshold = food_progress_threshold
         self._floor_z_threshold = floor_z_threshold
-        self._HP_loss_upon_touching_floor = HP_loss_upon_touching_floor
+        self._floor_HP_loss = floor_HP_loss
 
         # [!!!] HARD CODING BECAUSE THE MODEL IS INITIALIZED AFTER THE OBSERVATION SPACE
         # (IBN) Observation shape:
@@ -108,7 +108,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         HP_loss = 1
         if (self.is_body_touching_floor()):
             self.increase_penalty()
-            HP_loss = self._HP_loss_upon_touching_floor
+            HP_loss = self._floor_HP_loss
         self.HP -= HP_loss
 
         # (IBN) Observe food

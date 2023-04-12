@@ -20,6 +20,8 @@ part = 9
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
 # Path - Specials
+# (legacy) are models that were trained with the old versions of env_blobby.py
+# --------------------------------
 # 01: Breakdance (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
 # 02: Posing (legacy)
@@ -33,14 +35,15 @@ sb_path += str(steps_id) + "_steps"
 # 06: Testing - A2C (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 # 07: Fallback - PPO v1 
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
+# --------------------------------
 
 print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 
 # (IBN) Check if this matches sb3_save.py settings (except render_mode)
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 check_env(env)
-# SB3
+# SB3 algorithms
 model = PPO.load(sb_path)
 # model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
