@@ -1,4 +1,4 @@
-from gym_blobby.envs.env_blobby import BlobbyEnv
+from env_blobby import BlobbyEnv
 
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 

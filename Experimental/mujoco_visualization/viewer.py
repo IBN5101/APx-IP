@@ -1,7 +1,7 @@
 import mujoco
 from mujoco import viewer
 
-c = 2
+c = 1
 
 if (c == 1):
     # Humanoid

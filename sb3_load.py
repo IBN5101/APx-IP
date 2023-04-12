@@ -5,23 +5,21 @@ from stable_baselines3 import A2C
 from stable_baselines3 import SAC
 from stable_baselines3 import TD3
 
-from gym_blobby.envs.env_blobby import BlobbyEnv
+from env_blobby import BlobbyEnv
 import gymnasium
 
-# Paths
+# Path - Output
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
 # (IBN) Surely there is a better way to do this
-total_timesteps = 16 * 1000000
-episodes = 16
+total_timesteps = 10 * 1000000
+episodes = 10
 # --------------------------------
 part = 9
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
-print("Loading model from: " + sb_path.split("/")[-1] + " ...")
-
-# Special paths
+# Path - Specials
 # 01: Breakdance (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
 # 02: Posing (legacy)
@@ -35,7 +33,9 @@ print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 # 06: Testing - A2C (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 # 07: Fallback - PPO v1 
-# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
+sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
+
+print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 
 # (IBN) Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)

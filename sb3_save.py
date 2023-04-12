@@ -7,7 +7,7 @@ from stable_baselines3 import A2C
 from stable_baselines3 import SAC
 from stable_baselines3 import TD3
 
-from gym_blobby.envs.env_blobby import BlobbyEnv
+from env_blobby import BlobbyEnv
 import gymnasium
 
 # Paths
@@ -17,7 +17,7 @@ log_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 # Retrain (PPO)
 # UPDATE PER TRAINING
-retrain_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/PPO_retrain_v2"
+retrain_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/PPO_retrain_v2.1a"
 
 # Notes
 # Idea 1: Change food to not be one-time reward
@@ -31,18 +31,18 @@ env = Monitor(env, filename=monitor_path, info_keywords=("food_eaten_total","pen
 check_env(env)
 
 # SB3 algorithms
-model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+# model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
 # SB3 retrain
-# model = PPO.load(retrain_path, env=env)
+model = PPO.load(retrain_path, env=env)
 
 # Training settings
-total_timesteps = 16 * 1000000
-episodes = 16
+total_timesteps = 10 * 1000000
+episodes = 10
 # Estimations:
 # <!> PPO
 #   1M steps = 41 mins
