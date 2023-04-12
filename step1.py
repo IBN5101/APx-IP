@@ -63,7 +63,7 @@ print("Simulation completed")
 # print(data.sensor("vFood1"))
 
 # RGBA?
-print(data.site("vFood1"))
+print(data.time)
 
 # ----------------------------
 # Simulation #2

@@ -8,17 +8,19 @@ from stable_baselines3 import TD3
 from gym_blobby.envs.env_blobby import BlobbyEnv
 import gymnasium
 
-# Main paths
+# Paths
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
-# Surely there is a better way to do this
-total_timesteps = 2 * 1000000
-episodes = 10
+# (IBN) Surely there is a better way to do this
+total_timesteps = 16 * 1000000
+episodes = 16
 # --------------------------------
-part = 10
+part = 9
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
+print("Loading model from: " + sb_path.split("/")[-1] + " ...")
+
 # Special paths
 # 01: Breakdance (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/breakdance"
@@ -33,14 +35,12 @@ sb_path += str(steps_id) + "_steps"
 # 06: Testing - A2C (legacy)
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/A2C_testing"
 # 07: Fallback - PPO v1 
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
+# sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
 
-# Check if this matches sb3_save.py settings
+# (IBN) Check if this matches sb3_save.py settings
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
-# env = gymnasium.make("Ant-v4", render_mode = "human", terminate_when_unhealthy=True)
-
-# SB3
 check_env(env)
+# SB3
 model = PPO.load(sb_path)
 # model = DDPG.load(sb_path)
 # model = A2C.load(sb_path)
@@ -49,18 +49,12 @@ model = PPO.load(sb_path)
 
 observation, info = env.reset()
 for _ in range(10000):
-    # action = env.action_space.sample()
     action, _states = model.predict(observation)
     observation, reward, terminated, truncated, info = env.step(action)
+    # Debug:
     print(str(info["food_eaten_total"]) + "\t" 
           + str(info["HP"]) + "\t" 
-          + str(round(info["closest_food_distance"], 4)) + "\t"
-          + str(round(reward, 4)) + "\t")
-
-    # Debug:
-    # print(info["closest_food_distance"])
-    # print(observation[:3].round(3))
-    # print(action.round(3))
+          + str(round(info["closest_food_distance"], 4)) + "\t")
     
     if terminated or truncated:
         observation, info = env.reset()

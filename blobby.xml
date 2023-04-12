@@ -133,7 +133,7 @@
         <!-- Other world bodies -->
         <body>
             <!-- Testing -->
-            <site type="box" size="1 1 0.1" rgba="1 1 1 0.1"/> 
+            <site type="box" size="1 1 0.05" rgba="1 1 1 0.1"/> 
             <!-- Geom food -->
             <!-- <geom name="food1" class="food" pos="0.6 0 0"/>
             <geom name="food2" class="food" pos="1 0 0"  />

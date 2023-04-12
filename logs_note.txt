@@ -1,0 +1,5 @@
+PPO_2: first success (fallback created) -> v1.1
+TD3_1 - DDPG_4: final training on all other algorithms
+PPO_3: retrain PPO_2 -> v1.2
+PPO_4: retrain PPO_3 -> cancelled
+PPO_5: new PPO training -> v2.1a & v2.1b

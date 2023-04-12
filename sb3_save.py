@@ -10,11 +10,14 @@ from stable_baselines3 import TD3
 from gym_blobby.envs.env_blobby import BlobbyEnv
 import gymnasium
 
-# Settings
+# Paths
 xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
 sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/"
 log_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
+# Retrain (PPO)
+# UPDATE PER TRAINING
+retrain_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/PPO_retrain_v2"
 
 # Notes
 # Idea 1: Change food to not be one-time reward
@@ -22,18 +25,24 @@ monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
 # Idea 3: Termination with health. Health = 100, decrease on time, increase on food.
 # Idea 4: Death = -1, Food = +1, HP / 10000?
 
+# Env setup
 env = BlobbyEnv(render_mode=None, xml_file=xml_path)
 env = Monitor(env, filename=monitor_path, info_keywords=("food_eaten_total","penalty",))
-
 check_env(env)
 
 # SB3 algorithms
-# model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+# model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
+# SB3 retrain
+# model = PPO.load(retrain_path, env=env)
+
+# Training settings
+total_timesteps = 16 * 1000000
+episodes = 16
 # Estimations:
 # <!> PPO
 #   1M steps = 41 mins
@@ -52,8 +61,6 @@ model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 #   1M steps = 10 hours
 # <!> TD3
 #   1M steps = 7 hours
-total_timesteps = 2 * 1000000
-episodes = 10
 
 episode_timesteps = total_timesteps / episodes
 checkpoint_callback = CheckpointCallback(
@@ -61,10 +68,6 @@ checkpoint_callback = CheckpointCallback(
     save_path=sb_path,
     name_prefix="blobby",
 )
-model.learn(total_timesteps=total_timesteps, progress_bar=True, callback=checkpoint_callback)
-# for i in range(episodes):
-#     model.learn(total_timesteps=episode_timesteps, progress_bar=True, reset_num_timesteps=False)
-#     model.save(f"{sb_path}{i}")
-#     print("[-] Episode " + str(i) + " complete.")
 
+model.learn(total_timesteps=total_timesteps, progress_bar=True, callback=checkpoint_callback)
 print("[!] Training complete.")
