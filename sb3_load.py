@@ -1,3 +1,8 @@
+import os
+
+from env_blobby import BlobbyEnv
+import gymnasium
+
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3 import PPO
 from stable_baselines3 import DDPG
@@ -5,17 +10,16 @@ from stable_baselines3 import A2C
 from stable_baselines3 import SAC
 from stable_baselines3 import TD3
 
-from env_blobby import BlobbyEnv
-import gymnasium
 
 # Path - Output
-xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/blobby_"
+cwd = os.getcwd()
+xml_path = os.path.join(cwd, "blobby.xml")
+sb_path = "output/blobby_"
 # (IBN) Surely there is a better way to do this
-total_timesteps = 10 * 1000000
-episodes = 10
+total_timesteps = 15 * 1000000
+episodes = 15
 # --------------------------------
-part = 9
+part = 15
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
@@ -37,12 +41,15 @@ sb_path += str(steps_id) + "_steps"
 # 07: Fallback - PPO v1 
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
 # --------------------------------
-
+# TEMP:
+sb_path = "output/PPO_retrain_v2.2.zip"
+# --------------------------------
 print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 
 # (IBN) Check if this matches sb3_save.py settings (except render_mode)
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 check_env(env)
+
 # SB3 algorithms
 model = PPO.load(sb_path)
 # model = DDPG.load(sb_path)

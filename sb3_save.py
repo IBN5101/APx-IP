@@ -1,3 +1,8 @@
+import os
+
+from env_blobby import BlobbyEnv
+import gymnasium
+
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.monitor import Monitor
@@ -7,17 +12,15 @@ from stable_baselines3 import A2C
 from stable_baselines3 import SAC
 from stable_baselines3 import TD3
 
-from env_blobby import BlobbyEnv
-import gymnasium
-
 # Paths
-xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
-sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/"
-log_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
-monitor_path = "/home/vboxuser/Desktop/HQplus/CS3IP/logs/"
+cwd = os.getcwd()
+xml_path = os.path.join(cwd, "blobby.xml")
+sb_path = "output/"
+log_path = "logs/"
+monitor_path = "logs/"
 # Retrain (PPO)
 # UPDATE PER RE-TRAINING
-retrain_path = "/home/vboxuser/Desktop/HQplus/CS3IP/output/PPO_retrain_v2.1a"
+retrain_path = "output/PPO_retrain_v2.2"
 
 # Env setup
 env = BlobbyEnv(render_mode=None, xml_file=xml_path)
@@ -27,16 +30,16 @@ check_env(env)
 # SB3 algorithms
 # model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-# model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 
 # SB3 retrain
-model = PPO.load(retrain_path, env=env)
+# model = PPO.load(retrain_path, env=env)
 
 # Training settings
-total_timesteps = 10 * 1000000
-episodes = 10
+total_timesteps = 15 * 1000000
+episodes = 15
 # Estimations:
 # > PPO
 #   1M steps = 41 mins

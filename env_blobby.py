@@ -25,7 +25,7 @@ class BlobbyEnv(MujocoEnv, utils.EzPickle):
         reset_noise_scale=0.1,
         initial_HP=200,
         food_HP_increase=100,
-        food_progress_threshold=10,
+        food_progress_threshold=2,
         floor_z_threshold=0.26,
         floor_HP_loss=10,
         **kwargs

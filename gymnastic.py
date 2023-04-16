@@ -1,6 +1,8 @@
+import os
 from env_blobby import BlobbyEnv
 
-xml_path = "/home/vboxuser/Desktop/HQplus/CS3IP/blobby.xml"
+cwd = os.getcwd()
+xml_path = os.path.join(cwd, "blobby.xml")
 
 env = BlobbyEnv(render_mode="human", xml_file=xml_path)
 
