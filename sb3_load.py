@@ -19,7 +19,7 @@ sb_path = "output/blobby_"
 total_timesteps = 15 * 1000000
 episodes = 15
 # --------------------------------
-part = 15
+part = 3
 # --------------------------------
 steps_id = round(total_timesteps / episodes * part)
 sb_path += str(steps_id) + "_steps"
@@ -42,7 +42,7 @@ sb_path += str(steps_id) + "_steps"
 # sb_path = "/home/vboxuser/Desktop/HQplus/CS3IP/model/PPO_fallback_v1"
 # --------------------------------
 # TEMP:
-sb_path = "output/PPO_retrain_v2.2.zip"
+# sb_path = "output/PPO_retrain_v2.2.zip"
 # --------------------------------
 print("Loading model from: " + sb_path.split("/")[-1] + " ...")
 

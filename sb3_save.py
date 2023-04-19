@@ -20,7 +20,7 @@ log_path = "logs/"
 monitor_path = "logs/"
 # Retrain (PPO)
 # UPDATE PER RE-TRAINING
-retrain_path = "output/PPO_retrain_v2.2"
+retrain_path = "output/PPO_retrain_v2.1a"
 
 # Env setup
 env = BlobbyEnv(render_mode=None, xml_file=xml_path)
@@ -28,9 +28,9 @@ env = Monitor(env, filename=monitor_path, info_keywords=("food_eaten_total","pen
 check_env(env)
 
 # SB3 algorithms
-# model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+model = PPO("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = DDPG("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
-model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
+# model = A2C("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = SAC("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 # model = TD3("MlpPolicy", env, verbose=0, tensorboard_log=log_path)
 

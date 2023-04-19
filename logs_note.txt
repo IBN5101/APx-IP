@@ -3,5 +3,6 @@ TD3_1 - DDPG_4: final training on all other algorithms
 PPO_3: retrain PPO_2 -> v1.2 (???)
 PPO_4: retrain PPO_3 -> failed
 PPO_5: new PPO training -> v2.1a (9M) & v2.1b (16M)
-PPO_6: retrain PPO_5 v2.1b -> v2.2
+PPO_6: retrain PPO_5 v2.1b -> v2.2b
 PPO_7: retrain PPO_6 v2.2 -> failed
+PPO_8: retrain PPO_5 v2.1a -> v2.2a

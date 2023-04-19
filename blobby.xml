@@ -135,7 +135,7 @@
         <!-- Other world bodies -->
         <body>
             <!-- Testing -->
-            <site type="box" size="1 1 0.05" rgba="1 1 1 0.1"/> 
+            <!-- <site type="box" size="1 1 0.05" rgba="1 1 1 0.1"/>  -->
             <!-- Foods (site) -->
             <site name="vFood1" class="food" pos="0.5 0 0" />
             <site name="vFood2" class="food" pos="-1 0 0" />
